@@ -1,0 +1,25 @@
+<h2>Listado de Post</h2>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">Título</th>
+      <th scope="col">Post</th>
+      <th scope="col">Acciones</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each posts}}
+    <tr>
+      <td width="30%">{{this.title}}</td>
+      <td width="40%">{{this.body}}</td>
+      <td>
+        <button class="btn btn-primary m-1">Ver</button>
+        <button class="btn btn-warning m-1">Editar</button>
+        <button class="btn btn-danger m-1">Eliminar</button>
+      </td>
+    </tr>
+    {{/each}}
+  </tbody>
+</table>
+

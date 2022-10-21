@@ -1,15 +1,14 @@
 const Posts = require('../models/posts')
 
+
+//INDEX
 const getPosts = async (req, res) => {
     try {
         const posts = await Posts.find({}).lean()
 
-        //console.log(posts)
-        const title = 'Listado de Post'
-
         res.render('index', 
             {
-                title,
+                title: `Blog`,
                 posts
             }
         )
@@ -18,6 +17,24 @@ const getPosts = async (req, res) => {
     }
 }
 
+//SHOW
+const showPost = async (req, res) => {
+    try {
+        const post = await Posts.findOne({slug: req.params.slug}).lean()
+    if (post === null) return res.redirect('/')
+
+    res.render('show',
+        {
+            title: `Blog: ${post.title}`,
+            post
+        }
+        )
+    } catch (error) {
+        console.log('Error Show')
+    }
+}
+
 module.exports = {
-    getPosts
+    getPosts,
+    showPost
 }

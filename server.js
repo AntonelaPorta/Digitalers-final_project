@@ -29,11 +29,10 @@ app.use('/', routerIndex)
 app.use('/', routerDev)
 app.use('/', routerPosts)
 
-
 //Server
 const PORT = process.env.PORT || 8080
 
 app.listen(PORT, err => {
-    if(err) throw new Error(`Ocurrio un problema con el servidor: ${err}`)
+    if(err) throw new Error(`Ocurrió un problema con el servidor: ${err}`)
     console.log(`Servidor express escuchando en el puerto ${PORT}`)
 })

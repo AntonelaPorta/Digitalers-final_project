@@ -23,9 +23,6 @@ const postSchema = new mongoose.Schema(
 )
 
 //Middleware
-//Si encuentra dentro del modelo el title, genera el slug
-//title: "Hola que tal"
-//slug: "hola-que-tal"
 // TODO: llevar a carpeta middlewares
 postSchema.pre('validate', function(next) {
     if(this.title) {

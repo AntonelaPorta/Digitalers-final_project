@@ -1,22 +1,31 @@
 const express = require('express')
 const routerDev = express.Router()
 const Post = require('../models/posts')
+const { generatePost } = require('../helpers/posts')
 
 //TODO: Llevar esto a un controlador
 routerDev.get('/db/fresh', async (req, res = express.response) => {
     try {
-        //usamos el modelo que creamos para generar la informacion en nuestra db
-        const post = new Post() //creo el modelo de post para hacer la consulta
+        //delete All
+        //const postsdelete = await Post.deleteMany()
+        //console.log(postsdelete)
 
-        const nuevoPost = {
-            title: 'Post 1',
-            body: 'Body del post1'
+        //Count posts
+        const posts = await Post.find({}).count()
+        console.log(posts)
+
+        //Create POST
+        for (let i = 0; i < 0; i++) {
+            const nuevoPost = generatePost()
+            const post = new Post(nuevoPost)
+
+            await post.save()
         }
-        await post.save(nuevoPost)
 
         res.send('OK')
     } catch (error) {
         console.log(error)
+        res.send('ERROR')
     }
 })
 

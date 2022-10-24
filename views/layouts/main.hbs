@@ -16,37 +16,34 @@
 <body>
     <div class="container-xxl px-md-5 bg-white shadow-lg">
 
-        <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
-            <a href="/" class="d-flex align-items-center col-md-3 mb-2 mb-md-0 text-dark text-decoration-none">
-                <img src="/img/logo2.png" width="200" height="70" alt="Blog Gastronomico logo">
-            </a>
+       <header class="p-3 mb-3 border-bottom">
+            <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-xl-start">
+                <a href="/" class="d-flex align-items-center col-md-3 mb-2 mb-md-0 text-dark text-decoration-none">
+                    <img src="/img/logo2.png" width="200" height="70" alt="Blog Gastronomico logo">
+                </a>
 
-            <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
-                <li><a href="#" class="nav-link px-2 link-secondary">Home</a></li>
-                <li><a href="#" class="nav-link px-2 link-secondary">Sobre mi</a></li>
-                <li><a href="#" class="nav-link px-2 link-secondary">Enviar</a></li>
-                <li><a href="#" class="nav-link px-2 link-secondary">Contacto</a></li>
-            </ul>
+                <ul class="nav col-12 col-xl-auto mx-xl-auto justify-content-center mb-2 mb-md-0">
+                    <li><a href="#" class="nav-link px-2 link-secondary">Home</a></li>
+                    <li><a href="#" class="nav-link px-2 link-dark">All Posts</a></li>
+                    <li><a href="#" class="nav-link px-2 link-dark">Submit</a></li>
+                    <li><a href="#" class="nav-link px-2 link-dark">Contact</a></li>
+                </ul>
 
-            <div class="col-md-3 text-end">
-                <form action="POST" action="/search">
-                    <input type="search" name="search" class="form-control" placeholder="Buscar..." aria-label="Search">
+                <form class="col-12 col-xl-auto mb-3 mb-xl-0 me-xl-3" role="search">
+                    <input type="search" class="form-control" placeholder="Search..." aria-label="Search">
                 </form>
-            </div>
 
-            <button type="button" class="btn btn-outline-light me-2">Login</button>
-            <button type="button" class="btn btn-warning">Sign-up</button>    
+                <button type="button" class="btn btn-warning">Login</button> 
+            </div> 
         </header>
-
 
         <main>
             {{{body}}}
         </main>
 
         <footer class="d-flex flex-wrap justify-content-center align-items-center border-top py-3">
-            <p>Antonela Porta</p>
+            <p>Made by Antonela Porta</p>
         </footer>
-
 
     </div>
     

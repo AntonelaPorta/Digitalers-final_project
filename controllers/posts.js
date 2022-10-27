@@ -1,14 +1,35 @@
 const Posts = require('../models/posts')
 
+//Home
+const getPostsHome = async (req, res = response) => {
+    try {
+        const limitNumber = 4
+        const posts = await Posts.find({}).sort().limit(limitNumber).lean()
 
-//INDEX
+        res.status(200).render('home', 
+            {
+                title: `Blog - All Posts`,
+                posts
+            }
+        )
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+//INDEX - POSTS
 const getPosts = async (req, res) => {
     try {
         const posts = await Posts.find({}).lean()
+        
+        /*Funcion que acorta el body del post*/
+        posts.forEach(post => {
+            post.shortBody = post.body.substring(0,300)
+        })
 
-        res.render('index', 
+        res.status(200).render('posts', 
             {
-                title: `Blog`,
+                title: `Blog - All Posts`,
                 posts
             }
         )
@@ -23,7 +44,7 @@ const showPost = async (req, res) => {
         const post = await Posts.findOne({slug: req.params.slug}).lean()
     if (post === null) return res.redirect('/')
 
-    res.render('show',
+    res.render('post',
         {
             title: `Blog: ${post.title}`,
             post
@@ -91,5 +112,6 @@ module.exports = {
     deletePost,
     createPost,
     newPost,
-    showFormEditPost
+    showFormEditPost,
+    getPostsHome
 }

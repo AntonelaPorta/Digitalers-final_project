@@ -1,0 +1,58 @@
+<div class="container animate__animated animate__fadeIn">
+  <h1 class="page-title">{{post.title}}</h1>
+  <div class="row">
+    <div class="col-md-9 blog-post-wrapper">
+        <div class="post-header">
+            <div class="card_image">
+                <img src="{{post.image}}" class="card-img-top" alt="post image">
+            </div>
+            <strong class="d-inline-block mb-2">{{post.restaurant.location.province}}</strong>
+            <p class="mb-2 text-muted">{{post.userName}} - {{post.updatedAt}}</p>
+        </div>
+        <div class="post-content">
+            <p class="mb-2">{{post.body}}</p>
+        </div>
+        <div class="post-tags">
+            <a href="#!" class="btn btn-outline-secondary m-1">Design Studio</a>
+            <a href="#!" class="btn btn-outline-secondary m-1">Creative Design</a>
+        </div>
+        <div class="comment-section my-5">
+            <h5 class="section-title">Deja un comentario</h5>
+            <form action="POST" class="comment-form">
+                <div class="mb-3">
+                    <label for="name" class="form-label">Nombre</label>
+                    <input type="email" class="form-control" id="name" name="name" placeholder="Escribre tu nombre">
+                </div>
+                <div class="mb-3">
+                    <label for="comment" class="form-label">Mensaje</label>
+                    <textarea class="form-control" id="comment" name="comment" rows="3"></textarea>
+                </div>
+                <button type="button" class="btn btn-warning">Enviar</button> 
+            </form>
+        </div>
+    </div>
+    <div class="col-md-3">
+      <div class="sidebar-widget">
+        <h5 class="widget-title">Tags</h5>
+        <div class="widget-content">
+          <a href="#!" class="btn btn-outline-secondary m-1">a</a>
+          <a href="#!" class="btn btn-outline-secondary m-1">b</a>
+          <a href="#!" class="btn btn-outline-secondary m-1">c</a>
+          <a href="#!" class="btn btn-outline-secondary m-1">d</a>
+        </div>
+      </div>
+      <div class="sidebar-widget">
+        <h5 class="widget-title">Categories</h5>
+        <div class="widget-content">
+          <ul class="category-list">
+            <li><a href="#!">aaaa</a></li>
+            <li><a href="#!">bbbb</a></li>
+            <li><a href="#!">cccc</a></li>
+            <li><a href="#!">dddd</a></li>
+            <li><a href="#!">eeee</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

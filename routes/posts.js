@@ -1,9 +1,11 @@
 const express = require('express')
-const { getPosts, showPost,newPost, deletePost, createPost, editPost, showFormEditPost } = require('../controllers/posts')
+const { getPosts, showPost,newPost, deletePost, createPost, editPost, showFormEditPost, getPostsHome } = require('../controllers/posts')
 
 const routerPosts = express.Router()
 
 //Rutas de Post
+
+routerPosts.get('/', getPostsHome)
 routerPosts.get('/posts', getPosts)
 routerPosts.get('/posts/new', newPost)
 routerPosts.get('/posts/edit/:id', showFormEditPost) 

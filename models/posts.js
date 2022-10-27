@@ -15,9 +15,27 @@ const postSchema = new mongoose.Schema(
             type: String,
             required: true,
             unique: true
+        },
+        userName: {
+            type: String,
+            requered: true
+        },
+        restaurant: {
+            name: { type: String },
+            city: { type: String },
+            required: false
+        },
+        tags: {
+            type: Array,
+            required: false
+        },
+        image: {
+            type: String,
+            requerid: true
         }
     },
     {
+        timestamps: true,
         versionKey: false
     }
 )

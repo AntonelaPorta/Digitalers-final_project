@@ -15,7 +15,7 @@ routerDev.get('/db/fresh', async (req, res = express.response) => {
         console.log(posts)
 
         //Create POST
-        for (let i = 0; i < 0; i++) {
+        for (let i = 0; i < 15; i++) {
             const nuevoPost = generatePost()
             const post = new Post(nuevoPost)
 

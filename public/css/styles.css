@@ -52,11 +52,18 @@ a {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 400px;
+    max-height: 400px;
     overflow: hidden;
 }
 
-.category_img img {
+.card_image img {
     width: 100%;
     object-fit: cover;
 }
+
+.card-body strong {
+    color: #E3C770; 
+}
+
+/* All posts*/
+

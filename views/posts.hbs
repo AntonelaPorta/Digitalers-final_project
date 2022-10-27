@@ -1,5 +1,5 @@
 <div class="container">
-  <h1 class="page-title animate__animated animate__fadeInUp">Todos los posts</h1>
+  <h1 class="animate__animated animate__fadeInUp">Todos los posts</h1>
   <a href="/posts/new" class="btn btn-success animate__animated animate__fadeInUp" class="">
     <i class="bi bi-plus"></i> 
     Crear Post
@@ -9,10 +9,10 @@
       {{#each posts}}
         <article class="card post_card animate__animated animate__fadeInUp my-3">
           <div class="card_image">
-            <img src="{{this.image}}" class="card-img-top" alt="post image">
+            <img src="{{this.image}}" class="card-img-top" alt="post image" loading="lazy">
           </div>
           <div class="card-body p-4">
-            <strong class="d-inline-block mb-2">{{this.restaurant.location.province}}</strong>
+            <strong class="d-inline-block mb-2">{{this.category}}</strong>
             <h3 class="mb-0">{{this.title}}</h3>
             <p class="mb-2 text-muted">{{this.userName}} - {{this.updatedAt}}</p>
             <p class="mb-2">{{this.shortBody}}...</p>
@@ -27,29 +27,23 @@
         </article>
       {{/each}}
     </div>
-    <div class="col-md-3">
-      <div class="sidebar-widget animate__animated animate__fadeInUp">
-        <h5 class="widget-title">Tags</h5>
-        <div class="widget-content">
-          <a href="#!" class="btn btn-outline-secondary m-1">Design Studio</a>
-          <a href="#!" class="btn btn-outline-secondary m-1">Creative Design</a>
-          <a href="#!" class="btn btn-outline-secondary m-1">Marketing</a>
-          <a href="#!" class="btn btn-outline-secondary m-1">Typography</a>
-          <a href="#!" class="btn btn-outline-secondary m-1">Team</a>
-          <a href="#!" class="btn btn-outline-secondary m-1">Project</a>
-        </div>
+    <div class="col-md-3 my-3">
+      <div class="border-bottom pb-3">
+        <h5>Tags</h5>
+        <a href="#!" class="btn btn-outline-secondary m-1">Tag 1</a>
+        <a href="#!" class="btn btn-outline-secondary m-1">Tag 2</a>
+        <a href="#!" class="btn btn-outline-secondary m-1">Tag 3</a>
+        <a href="#!" class="btn btn-outline-secondary m-1">Tag 4</a>
       </div>
-      <div class="sidebar-widget animate__animated animate__fadeInUp">
-        <h5 class="widget-title">Categories</h5>
-        <div class="widget-content">
-          <ul class="category-list">
-            <li><a href="#!">Animation</a></li>
-            <li><a href="#!">Branding</a></li>
-            <li><a href="#!">Graphic Design</a></li>
-            <li><a href="#!">Photography</a></li>
-            <li><a href="#!">Web Developing</a></li>
+      <div class="border-bottom py-3">
+        <h5>Categories</h5>
+          <ul>
+            <li><a class="text-decoration-none" href="#!">aaaa</a></li>
+            <li><a class="text-decoration-none" href="#!">bbbb</a></li>
+            <li><a class="text-decoration-none" href="#!">cccc</a></li>
+            <li><a class="text-decoration-none" href="#!">dddd</a></li>
+            <li><a class="text-decoration-none" href="#!">eeee</a></li>
           </ul>
-        </div>
       </div>
     </div>
   </div>

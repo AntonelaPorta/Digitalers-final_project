@@ -20,12 +20,7 @@ const postSchema = new mongoose.Schema(
             type: String,
             requered: true
         },
-        restaurant: {
-            name: { type: String },
-            city: { type: String },
-            required: false
-        },
-        tags: {
+        category: {
             type: Array,
             required: false
         },

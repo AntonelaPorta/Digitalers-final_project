@@ -6,6 +6,11 @@ const getPostsHome = async (req, res = response) => {
         const limitNumber = 4
         const posts = await Posts.find({}).sort().limit(limitNumber).lean()
 
+        /*Funcion que acorta el body del post*/
+        posts.forEach(post => {
+            post.shortBody = post.body.substring(0,300)
+        })
+
         res.status(200).render('home', 
             {
                 title: `Blog - All Posts`,

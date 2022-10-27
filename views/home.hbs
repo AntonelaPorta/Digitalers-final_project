@@ -4,10 +4,10 @@
     </div>
 
     <div class="col-12 col-lg-6">
-        <h1 class="display-5 fw-bold mb-3">Recomendaciones de restaurantes en Argentina</h1>
+        <h1 class="display-5 fw-bold mb-3">Recomendaciones de restaurantes en Campana</h1>
         <h2 class="h4">Las reseñas que necesitas antes de comer en un nuevo restaurante</h2>
         <p class="lead">
-            Cuando quires probar algo nuevo, puede ser difícil encontrar un lugar que tenga lo que estas buscando. Afortunadamente, con nuestras reseñas te brindamos información acerca de los restaurantes en su área.
+            Cuando quieres probar algo nuevo, puede ser difícil encontrar un lugar que tenga lo que estas buscando. Afortunadamente, con nuestras reseñas te brindamos información acerca de los restaurantes en su área.
         </p>
     </div>
 
@@ -71,7 +71,7 @@
 <section class="my-5">
     <div class="d-flex mb-2 align-items-center">
         <h2>Últimas resañas</h2>
-        <a href="/expore-latest" class="ms-auto">Ver más</a>
+        <a href="/posts" class="ms-auto">Ver más</a>
     </div>
     
     <div class="row row-cols-1 row-cols-xl-2 g-4">
@@ -79,10 +79,10 @@
         <div class="col">
             <article class="card post_card animate__animated animate__fadeInUp my-3">
                 <div class="card_image">
-                    <img src="{{this.image}}" class="card-img-top" alt="post image">
+                    <img src="{{this.image}}" class="card-img-top" alt="post image" loading="lazy">
                 </div>
                 <div class="card-body p-4">
-                    <strong class="d-inline-block mb-2">{{this.restaurant.location.province}}</strong>
+                    <strong class="d-inline-block mb-2">{{this.category}}</strong>
                     <h3 class="mb-0">{{this.title}}</h3>
                     <p class="mb-2 text-muted">{{this.userName}} - {{this.updatedAt}}</p>
                     <p class="mb-2">{{this.shortBody}}...</p>

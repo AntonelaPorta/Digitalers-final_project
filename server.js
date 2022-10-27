@@ -7,7 +7,7 @@ const passport = require('passport')
 const methodOverride =  require('method-override')
 require("./config/passport")
 
-const { dbConnection } = require('./databases/config')
+const { dbConnection } = require('./config/database')
 const routerDev = require('./routes/db')
 const routerPosts = require('./routes/posts')
 const { routerAuth } = require('./routes/auth')

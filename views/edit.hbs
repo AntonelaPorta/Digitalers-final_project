@@ -1,13 +1,39 @@
-<h2>Edit Post</h2>
+<h2>Edita tu Post</h2>
 
-<form action="/posts/{{post._id}}$_method=PUT" method="POST">
-    <div class="form-control">
-        <label for="title" class="form-label">Título</label>
-        <input type="text" class="form-control" id="title" name="title" value="{{post.title}}">
+<form action="/posts/{{post._id}}?_method=PUT" method="POST" class="my-4 needs-validation" id="editForm" novalidate>
+    <div class="form-control bg-light">
+        <div class="form-group">
+            <label for="title" class="form-label mt-4 fw-bold">Título</label>
+            <input type="text" class="form-control" id="title" name="title" value="{{post.title}}" required>
+            <div class="invalid-feedback">
+                Ingrese un título al post.
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label for="body" class="form-label mt-4 fw-bold">Cuerpo</label>
+            <textarea class="form-control" id="body" name="body" rows="3" minlength="500" required>{{post.body}}</textarea>
+            <div class="invalid-feedback">
+                Ingrese al menos 500 caracteres.
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label for="category" class="form-label mt-4 fw-bold">Categoría</label>
+            <input type="text" class="form-control" id="category" name="category" value="{{post.category}}" pattern="[A-Za-z]{4,10}" required>
+            <div class="invalid-feedback">
+                Ingrese una categoría para el post.
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label for="image" class="form-label mt-4 fw-bold">Ingrese la URL de la imagen</label>
+            <input class="form-control" type="text" id="image" name="image" value="{{post.image}}" pattern="^(http(s)?:\/\/)+[\w\-\._~:\/?#[\]@!\$&'\(\)\*\+,;=.]+$" required>
+            <div class="invalid-feedback">
+                Ingrese la url de la imagen con el formato correspondiente.
+            </div>
+        </div>
 
-        <label for="body" class="form-label">Cuerpo</label>
-        <textarea class="form-control" id="body" name="body" rows="3">{{post.body}}</textarea>
-
-        <button class="btn btn-primary mt-4">Enviar</button>
+        <button class="btn btn-success my-4" id="sendEdit">Enviar</button>
     </div>
 </form>

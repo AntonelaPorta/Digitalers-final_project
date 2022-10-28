@@ -1,10 +1,10 @@
-const Posts = require('../models/posts')
+const Post = require('../models/posts')
 
-//Home
-const getPostsHome = async (req, res = response) => {
+//Home Page
+const getHome = async (req, res = response) => {
     try {
         const limitNumber = 4
-        const posts = await Posts.find({}).sort().limit(limitNumber).lean()
+        const posts = await Post.find({}).sort().limit(limitNumber).lean()
 
         /*Funcion que acorta el body del post*/
         posts.forEach(post => {
@@ -13,7 +13,7 @@ const getPostsHome = async (req, res = response) => {
 
         res.status(200).render('home', 
             {
-                title: `Blog - All Posts`,
+                title: `Blog - All Post`,
                 posts
             }
         )
@@ -22,10 +22,10 @@ const getPostsHome = async (req, res = response) => {
     }
 }
 
-//INDEX - POSTS
+//INDEX - GET all posts
 const getPosts = async (req, res) => {
     try {
-        const posts = await Posts.find({}).lean()
+        const posts = await Post.find({}).lean()
         
         /*Funcion que acorta el body del post*/
         posts.forEach(post => {
@@ -34,7 +34,7 @@ const getPosts = async (req, res) => {
 
         res.status(200).render('posts', 
             {
-                title: `Blog - All Posts`,
+                title: `Blog - All Post`,
                 posts
             }
         )
@@ -43,10 +43,10 @@ const getPosts = async (req, res) => {
     }
 }
 
-//SHOW
+//SHOW - GET one post
 const showPost = async (req, res) => {
     try {
-        const post = await Posts.findOne({slug: req.params.slug}).lean()
+        const post = await Post.findOne({slug: req.params.slug}).lean()
     if (post === null) return res.redirect('/')
 
     res.render('post',
@@ -60,16 +60,16 @@ const showPost = async (req, res) => {
     }
 }
 
-//newPost
+//GET Template form para crear un post
 const newPost = (req, res) => {
     res.status(200).render('new')
 }
 
-//Create
+//POST crear un post
 const createPost = async (req, res) => {
     try {
 
-        const newPost = new Posts()
+        const newPost = new Post()
 
         newPost = {
             title: req.body.title,
@@ -84,12 +84,10 @@ const createPost = async (req, res) => {
     }
 }
 
-//show Form Post to edit 
-
+//GET Form para editar un post
 const showFormEditPost = async (req, res) => {
     try {
-        const post = await Posts.findById(req.params.id)
-        console.log(post)
+        const post = await Post.findById(req.params.id).lean()
 
         res.render('edit', {
             title: 'Editando Post',
@@ -100,14 +98,27 @@ const showFormEditPost = async (req, res) => {
     }
 }
 
-//Delete
+//EDIT
+const editPost = async (req, res) => {
+    try {
+        const id = req.params.id
+
+        const updatedResult = await Post.findByIdAndUpdate(id, req.body, { new: true })
+
+        res.redirect(`/posts/${updatedResult.slug}`)
+    } catch (error) {
+        console.log('Error EDIT')
+    }
+}
+
+//DELETE
 const deletePost = async (req, res) => {
     try {
-        await Posts.findByIdAndDelete(req.params.id)
+        await Post.findByIdAndDelete(req.params.id)
 
         res.redirect('/posts')
     } catch (error) {
-        console.log('Error Show')
+        console.log('Error DELETE')
     }
 }
 
@@ -115,8 +126,9 @@ module.exports = {
     getPosts,
     showPost,
     deletePost,
+    editPost,
     createPost,
     newPost,
     showFormEditPost,
-    getPostsHome
+    getHome
 }

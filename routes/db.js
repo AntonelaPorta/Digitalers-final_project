@@ -29,4 +29,6 @@ routerDev.get('/db/fresh', async (req, res = express.response) => {
     }
 })
 
-module.exports = routerDev
+module.exports = {
+    routerDev
+}

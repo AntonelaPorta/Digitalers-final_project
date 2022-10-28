@@ -4,12 +4,12 @@ const { engine } = require('express-handlebars')
 const session = require('express-session')
 const MongoStore = require('connect-mongo')
 const passport = require('passport')
-const methodOverride =  require('method-override')
+const methodOverride = require('method-override')
 require("./config/passport")
 
 const { dbConnection } = require('./config/database')
-const routerDev = require('./routes/db')
-const routerPosts = require('./routes/posts')
+const { routerDev } = require('./routes/db')
+const { routerPosts } = require('./routes/posts')
 const { routerAuth } = require('./routes/auth')
 
 const app = express()
@@ -40,7 +40,7 @@ app.use(passport.initialize())
 app.use(passport.session())
 
 //routes
-app.use('/', routerDev)
+app.use('/', routerDev) //Solo para desarrollo
 app.use('/', routerPosts)
 app.use('/', routerAuth)
 

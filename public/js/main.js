@@ -8,7 +8,7 @@ document.addEventListener('readystatechange', () => {
     if(loader){
         setTimeout(() => {
             loader.classList.remove('loader-page')
-        }, 200);
+        }, 300)
     }
 })
 

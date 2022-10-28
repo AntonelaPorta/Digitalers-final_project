@@ -1,4 +1,5 @@
 const Post = require('../models/posts')
+const slugify = require('slugify')
 
 //Home Page
 const getHome = async (req, res = response) => {
@@ -25,7 +26,7 @@ const getHome = async (req, res = response) => {
 //INDEX - GET all posts
 const getPosts = async (req, res) => {
     try {
-        const posts = await Post.find({}).lean()
+        const posts = await Post.find({}).sort({createdAt: -1}).lean()
         
         /*Funcion que acorta el body del post*/
         posts.forEach(post => {
@@ -71,14 +72,15 @@ const createPost = async (req, res) => {
 
         const newPost = new Post()
 
-        newPost = {
-            title: req.body.title,
-            body: req.body.body
-        }
+        newPost.title = req.body.title
+        newPost.body = req.body.body
+        newPost.category = req.body.category
+        newPost.image = req.body.image
+        newPost.userName = "User" //TODO ver usuario del signin
 
-        await newPost.save()
+        newPost = await newPost.save()
 
-        res.redirect(`/posts/${post.slug}`)
+        res.redirect(`/posts/${newPost.slug}`)
     } catch (error) {
         console.log('Error al crear un Post')
     }
@@ -103,9 +105,17 @@ const editPost = async (req, res) => {
     try {
         const id = req.params.id
 
-        const updatedResult = await Post.findByIdAndUpdate(id, req.body, { new: true })
+        const updatedPost = {
+            title: req.body.title,
+            body: req.body.body,
+            category: req.body.category,
+            image: req.body.image,
+            slug: slugify(req.body.title, {lower: true, strict: true})
+        }
 
-        res.redirect(`/posts/${updatedResult.slug}`)
+        await Post.findByIdAndUpdate(id, updatedPost, { new: true })
+
+        res.redirect(`/posts/${updatedPost.slug}`)
     } catch (error) {
         console.log('Error EDIT')
     }

@@ -27,6 +27,10 @@ const postSchema = new mongoose.Schema(
         image: {
             type: String,
             requerid: true
+        },
+        views: {
+            type: Number,
+            required: true
         }
     },
     {
@@ -41,6 +45,7 @@ postSchema.pre('validate', function(next) {
     if(this.title) {
         this.slug = slugify(this.title, {lower: true, strict: true})
     }
+    this.views = 0
     next()
 })
 

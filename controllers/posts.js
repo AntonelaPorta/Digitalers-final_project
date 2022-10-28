@@ -5,12 +5,12 @@ const { formatDate } = require('../helpers/date')
 //Home Page
 const getHome = async (req, res = response) => {
     try {
-        const limitNumber = 4
-        const posts = await Post.find({}).sort().limit(limitNumber).lean()
+        const posts = await Post.find({}).sort({views: -1}).limit(4).lean()
 
         /*Funcion que acorta el body del post*/
         posts.forEach(post => {
             post.shortBody = post.body.substring(0,300)
+            post.updatedAt = formatDate(post.updatedAt)
         })
 
         res.status(200).render('home', 
@@ -27,7 +27,7 @@ const getHome = async (req, res = response) => {
 //INDEX - GET all posts
 const getPosts = async (req, res) => {
     try {
-        const posts = await Post.find({}).sort({createdAt: -1}).lean()
+        const posts = await Post.find({}).sort({updatedAt: -1}).lean()
         
         /*Funcion que acorta el body del post*/
         posts.forEach(post => {
@@ -54,12 +54,16 @@ const showPost = async (req, res) => {
 
     post.updatedAt = formatDate(post.updatedAt)
     
+    //Update views post
+    await Post.findOneAndUpdate({slug: req.params.slug}, {views: ++post.views})
+ 
     res.render('post',
         {
             title: `Blog: ${post.title}`,
             post
         }
-        )
+    )
+
     } catch (error) {
         console.log('Error Show')
     }

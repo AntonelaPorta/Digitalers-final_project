@@ -8,8 +8,7 @@ const generatePost = () => {
         body: faker.lorem.sentence(100),
         userName: faker.internet.userName(),
         category: randomCategory(),
-        image: faker.image.food(640, 480, true)
-
+        image: faker.image.food(640, 480, true),
     }
     return post
 }

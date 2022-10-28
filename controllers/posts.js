@@ -27,7 +27,7 @@ const getHome = async (req, res = response) => {
 //INDEX - GET all posts
 const getPosts = async (req, res) => {
     try {
-        const posts = await Post.find({}).sort({updatedAt: -1}).lean()
+        const posts = await Post.find({}).sort({createdAt: -1}).lean()
         
         /*Funcion que acorta el body del post*/
         posts.forEach(post => {

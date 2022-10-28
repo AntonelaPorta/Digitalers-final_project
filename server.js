@@ -33,7 +33,7 @@ app.use(
         secret: process.env.SESSION_SECRET,
         resave: true,
         saveUninitialized: true,
-        store: MongoStore.create({ mongoUrl: process.env.DB_LOCAL_URI })
+        store: MongoStore.create({ mongoUrl: process.env.DB_REMOTE_URI })
     })
 )
 app.use(passport.initialize())

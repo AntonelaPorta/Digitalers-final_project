@@ -1,5 +1,6 @@
 const Post = require('../models/posts')
 const slugify = require('slugify')
+const { formatDate } = require('../helpers/date')
 
 //Home Page
 const getHome = async (req, res = response) => {
@@ -31,6 +32,7 @@ const getPosts = async (req, res) => {
         /*Funcion que acorta el body del post*/
         posts.forEach(post => {
             post.shortBody = post.body.substring(0,300)
+            post.updatedAt = formatDate(post.updatedAt)
         })
 
         res.status(200).render('posts', 
@@ -50,6 +52,8 @@ const showPost = async (req, res) => {
         const post = await Post.findOne({slug: req.params.slug}).lean()
     if (post === null) return res.redirect('/')
 
+    post.updatedAt = formatDate(post.updatedAt)
+    
     res.render('post',
         {
             title: `Blog: ${post.title}`,

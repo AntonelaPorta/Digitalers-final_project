@@ -16,9 +16,9 @@ const postSchema = new mongoose.Schema(
             required: true,
             unique: true
         },
-        userName: {
+        user: {
             type: String,
-            requered: true
+            required: true
         },
         category: {
             type: String,

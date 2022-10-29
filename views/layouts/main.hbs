@@ -20,38 +20,9 @@
         <div class="loader-page">
     </div>
 
-    </div>
     <div class="container-xxl px-md-5 bg-white shadow-lg">
 
-       <header class="p-3 mb-3 border-bottom">
-            <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-xl-start">
-                <a href="/" class="d-flex align-items-center col-md-3 mb-2 mb-md-0 text-dark text-decoration-none">
-                    <img src="/img/logo2.png" width="200" height="70" alt="Blog Gastronomico logo">
-                </a>
-
-                <ul class="nav col-12 col-xl-auto mx-xl-auto justify-content-center mb-2 mb-md-0">
-                    <li><a href="/" class="nav-link px-2 link-secondary">Home</a></li>
-                    <li><a href="/posts" class="nav-link px-2 link-dark">Posts</a></li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle px-2 link-dark" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Categoria
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#">Action</a></li>
-                            <li><a class="dropdown-item" href="#">Another action</a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="#">Something else here</a></li>
-                        </ul>
-                    </li>
-                    <li><a href="#" class="nav-link px-2 link-dark">Contacto</a></li>
-                </ul>
-
-                <form class="col-12 col-xl-auto mb-3 mb-xl-0 me-xl-3" role="search">
-                    <input type="search" class="form-control" placeholder="Search..." aria-label="Search">
-                </form>
-                <a href="/auth/signin" class="btn btn-warning">Sign in</a>
-            </div> 
-        </header>
+       {{> navbar}}
 
         <main>
             {{{body}}}

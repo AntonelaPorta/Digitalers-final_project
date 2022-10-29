@@ -1,17 +1,20 @@
 const express = require('express')
-require('dotenv').config()
 const { engine } = require('express-handlebars')
 const session = require('express-session')
 const MongoStore = require('connect-mongo')
 const passport = require('passport')
 const methodOverride = require('method-override')
+const flash = require('connect-flash')
+require('dotenv').config()
 require("./config/passport")
+
 
 const { dbConnection } = require('./config/database')
 const { routerDev } = require('./routes/db')
 const { routerPosts } = require('./routes/posts')
 const { routerAuth } = require('./routes/auth')
 
+// Inicializo la aplicación de express
 const app = express()
 
 //Conectar a la DB
@@ -38,8 +41,22 @@ app.use(
 )
 app.use(passport.initialize())
 app.use(passport.session())
+app.use(flash())
 
-//routes
+app.use((req, res, next) => {
+    res.locals.todo_ok = req.flash('todo_ok')
+    res.locals.todo_error = req.flash('todo_error')
+    res.locals.user = req.user || null
+    next()
+})
+
+//TODO borrar, muestra el usuario logueado
+app.use((req, res, next) => {
+    //console.log(req.user)
+    next()
+})
+
+// Routes
 app.use('/', routerDev) //Solo para desarrollo
 app.use('/', routerPosts)
 app.use('/', routerAuth)

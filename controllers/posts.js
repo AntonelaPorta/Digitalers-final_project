@@ -15,7 +15,7 @@ const getHome = async (req, res = response) => {
 
         res.status(200).render('home', 
             {
-                title: `Blog - All Post`,
+                title: `Blog Gastronómico`,
                 posts
             }
         )
@@ -37,7 +37,7 @@ const getPosts = async (req, res) => {
 
         res.status(200).render('posts', 
             {
-                title: `Blog - All Post`,
+                title: `Blog Gastronómico - Todos los Posts`,
                 posts
             }
         )
@@ -59,7 +59,7 @@ const showPost = async (req, res) => {
  
     res.render('post',
         {
-            title: `Blog: ${post.title}`,
+            title: `Blog Gastronómico - ${post.title}`,
             post
         }
     )
@@ -71,26 +71,27 @@ const showPost = async (req, res) => {
 
 //GET Template form para crear un post
 const newPost = (req, res) => {
-    res.status(200).render('new')
+    res.status(200).render('new', {
+        title: "Blog Gastronómico - Creando Post"
+    })
 }
 
 //POST crear un post
 const createPost = async (req, res) => {
     try {
-
-        const newPost = new Post()
+        let newPost = new Post()
 
         newPost.title = req.body.title
         newPost.body = req.body.body
         newPost.category = req.body.category
         newPost.image = req.body.image
-        newPost.userName = "User" //TODO ver usuario del signin
+        newPost.user = req.user.name
 
         newPost = await newPost.save()
 
         res.redirect(`/posts/${newPost.slug}`)
     } catch (error) {
-        console.log('Error al crear un Post')
+        console.log('Error al crear un Post', error)
     }
 }
 
@@ -100,7 +101,7 @@ const showFormEditPost = async (req, res) => {
         const post = await Post.findById(req.params.id).lean()
 
         res.render('edit', {
-            title: 'Editando Post',
+            title: 'Blog Gastronómico - Editando Post',
             post
         })
     } catch (error) {

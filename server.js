@@ -36,7 +36,7 @@ app.use(
         secret: process.env.SESSION_SECRET,
         resave: true,
         saveUninitialized: true,
-        store: MongoStore.create({ mongoUrl: process.env.DB_REMOTE_URI })
+        store: MongoStore.create({ mongoUrl: process.env.DB_LOCAL_URI })
     })
 )
 app.use(passport.initialize())
@@ -46,13 +46,15 @@ app.use(flash())
 app.use((req, res, next) => {
     res.locals.todo_ok = req.flash('todo_ok')
     res.locals.todo_error = req.flash('todo_error')
+
     res.locals.user = req.user || null
+    res.locals.userName = req.user ? req.user.name : null
     next()
 })
 
 //TODO borrar, muestra el usuario logueado
 app.use((req, res, next) => {
-    //console.log(req.user)
+    //console.log(req.user.name)
     next()
 })
 

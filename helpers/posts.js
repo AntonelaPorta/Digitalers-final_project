@@ -6,7 +6,7 @@ const generatePost = () => {
     const post = {
         title: faker.lorem.words(6),
         body: faker.lorem.sentence(100),
-        userName: faker.internet.userName(),
+        user: faker.internet.userName(),
         category: randomCategory(),
         image: faker.image.food(640, 480, true),
     }

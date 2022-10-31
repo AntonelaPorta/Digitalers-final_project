@@ -1,5 +1,6 @@
 const express = require('express')
-const { showAuthFormSignUp, signup, showAuthFormSignin, signin, logout } = require('../controllers/auth')
+const { showAuthFormSignUp, signup, showAuthFormSignin, signin, logout} = require('../controllers/auth')
+const { isAuthenticated } = require('../middlewares/isauthenticated')
 const routerAuth = express.Router()
 
 //Router

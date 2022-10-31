@@ -2,16 +2,21 @@
 {{> errorValidation}}
 {{> successAuth}}
 
-<div class="col">
+<div class="col m-3">
     <form action="/auth/signin" method="POST">
-        <div class="form-control">
-            <label for="email" class="form-label">Email</label>
-            <input type="email" class="form-control" id="email" name="email" placeholder="Ingrese su mail">
+        <div class="form-control bg-light">
+            <div class="form-group m-2">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" class="form-control" id="email" name="email" placeholder="Ingrese su mail">
+            </div>
+            <div class="form-group m-2">
+                <label for="password" class="form-label">Contraseña</label>
+                <input type="password" class="form-control" id="password" name="password" placeholder="Ingrese su contraseña">
+            </div>
+            <button class="btn btn-warning">Sign In</button>
         </div>
-        <div class="form-control">
-            <label for="password" class="form-label">Contraseña</label>
-            <input type="password" class="form-control" id="password" name="password" placeholder="Ingrese su contraseña">
-        </div>
-        <button class="btn btn-warning">Sign In</button>
     </form>
+    <div class="d-grid gap-2 m-4">
+        <a href="/auth/signup" class="btn btn-lg btn-success">Crear cuenta nueva</a>
+    </div>
 </div>

@@ -1,13 +1,19 @@
 const Post = require('../models/posts')
 const slugify = require('slugify')
 const { formatDate } = require('../helpers/date')
+const { errorMonitor } = require('connect-mongo')
 
-//Home Page
+/**
+ * GET /
+ *  Home page
+ */
+
 const getHome = async (req, res = response) => {
     try {
         const posts = await Post.find({}).sort({views: -1}).limit(4).lean()
 
         /*Funcion que acorta el body del post*/
+        //TODO Convetir la funcion en una reutilizable
         posts.forEach(post => {
             post.shortBody = post.body.substring(0,300)
             post.updatedAt = formatDate(post.updatedAt)
@@ -24,20 +30,25 @@ const getHome = async (req, res = response) => {
     }
 }
 
-//INDEX - GET all posts
+/**
+ * GET /posts
+ *  All posts
+ */
 const getPosts = async (req, res) => {
     try {
         const posts = await Post.find({}).sort({createdAt: -1}).lean()
-        
-        /*Funcion que acorta el body del post*/
-        posts.forEach(post => {
-            post.shortBody = post.body.substring(0,300)
-            post.updatedAt = formatDate(post.updatedAt)
-        })
+
+        if(posts !== {}) {
+            posts.forEach(post => {
+                post.shortBody = post.body.substring(0,300)
+                post.updatedAt = formatDate(post.updatedAt)
+            })
+        }
 
         res.status(200).render('posts', 
             {
                 title: `Blog Gastronómico - Todos los Posts`,
+                TemplateTitle: 'Todos los posts',
                 posts
             }
         )
@@ -46,7 +57,10 @@ const getPosts = async (req, res) => {
     }
 }
 
-//SHOW - GET one post
+/**
+ * GET /post/:slug
+ *  One post
+ */
 const showPost = async (req, res) => {
     try {
         const post = await Post.findOne({slug: req.params.slug}).lean()
@@ -69,14 +83,51 @@ const showPost = async (req, res) => {
     }
 }
 
-//GET Template form para crear un post
+/**
+ * GET /posts/user
+ *  User log Post
+ */
+const getUserPosts = async (req, res) => {
+
+    try {
+        const user = req.user.name
+        const posts = await Post.find({user: user}).sort({createdAt: -1}).lean()
+        console.log(posts)
+
+        /*Funcion que acorta el body del post*/
+        if(posts !== []) {
+            posts.forEach(post => {
+                post.shortBody = post.body.substring(0,300)
+                post.updatedAt = formatDate(post.updatedAt)
+            })
+        }
+
+        res.status(200).render('userPosts', 
+            {
+                title: `Blog Gastronómico - Posts de ${user}`,
+                posts,
+                user
+            }
+        )
+    } catch (error) {
+        console.log(errorMonitor)
+    }
+}
+
+/**
+ * GET /posts/new
+ * Template form para crear un post
+ */
 const newPost = (req, res) => {
     res.status(200).render('new', {
         title: "Blog Gastronómico - Creando Post"
     })
 }
 
-//POST crear un post
+/**
+ * POST /posts
+ * Crear un post
+ */
 const createPost = async (req, res) => {
     try {
         let newPost = new Post()
@@ -95,7 +146,10 @@ const createPost = async (req, res) => {
     }
 }
 
-//GET Form para editar un post
+/**
+ * GET /posts/edit/:id
+ * Form para editar un post
+ */
 const showFormEditPost = async (req, res) => {
     try {
         const post = await Post.findById(req.params.id).lean()
@@ -109,7 +163,10 @@ const showFormEditPost = async (req, res) => {
     }
 }
 
-//EDIT
+/**
+ * PUT /posts/:id
+ * Editar post
+ */
 const editPost = async (req, res) => {
     try {
         const id = req.params.id
@@ -130,14 +187,39 @@ const editPost = async (req, res) => {
     }
 }
 
-//DELETE
+/**
+ * DELETE /posts/:id
+ * Eliminar post
+ */
 const deletePost = async (req, res) => {
     try {
         await Post.findByIdAndDelete(req.params.id)
 
-        res.redirect('/posts')
+        res.redirect('/posts/user')
     } catch (error) {
         console.log('Error DELETE')
+    }
+}
+
+/**
+ * POST /posts/search
+ * Busqueda de post en particular
+ */
+const searchPosts = async (req, res) => {
+    try {
+        const searchTerm =  req.body.searchTerm
+
+        const posts = await Post.find( { $text: {$search: searchTerm}}).lean()
+
+        res.status(200).render('posts', 
+            {
+                title: `Blog Gastronómico - Search`,
+                TemplateTitle: 'Search Posts',
+                posts
+            }
+        )
+    } catch (error) {
+        res.status(500).send({message: error.message} || "Error Occurred")
     }
 }
 
@@ -149,5 +231,7 @@ module.exports = {
     createPost,
     newPost,
     showFormEditPost,
-    getHome
+    getHome,
+    getUserPosts,
+    searchPosts
 }

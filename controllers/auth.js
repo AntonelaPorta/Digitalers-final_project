@@ -5,52 +5,56 @@ const showAuthFormSignUp = (req, res) => {
     res.render('auth/signup')
 }
 
+/* Register */
 const signup = async (req, res) => {
-    const errors = []    
-    const { name, email, password, confirm_password } = req.body
+    try {
+        const errors = []    
+        const { name, email, password, confirm_password } = req.body
 
-    if( password !== confirm_password) {
-        errors.push({ msg: 'La contraseña no machea'})
+        if( password !== confirm_password) {
+            errors.push({ msg: 'La contraseña no machea'})
+        }
+
+        if( password.lenght < 4) {
+            errors.push({ msg: 'La contraseña debe tener al menos 4 caracteres'})
+        }
+
+        if( errors.lenght > 0) {
+            return res.render('auth/signup', {
+                errors,
+                name,
+                email
+            })
+        }
+
+        const userFound = await Auth.findOne({ email })
+        if( userFound ) {
+            req.flash('todo_error', 'El mail ya existe en nuestros registros') //TODO: terminar con los mensajes de alerta
+            return res.status(400).redirect('/auth/signup')
+        }
+
+        const newUser = new Auth({ name, email, password })
+        newUser.password = await newUser.passwordEncrypt(password)
+        await newUser.save()
+
+        //Mensaje de exito en la creacion de el usuario
+        req.flash("todo_ok", "Se registro correctamente")
+
+        res.redirect('/auth/signin')
+    } catch (error) {
+        res.status(500).send("Server Error", error) //TODO ERROR
     }
-
-    if( password.lenght < 4) {
-        errors.push({ msg: 'La contraseña debe tener al menos 4 caracteres'})
-    }
-
-    if( errors.lenght > 0) {
-        return res.render('auth/signup', {
-            errors,
-            name,
-            email
-        })
-    }
-
-    const userFound = await Auth.findOne({ email })
-    if( userFound ) {
-        req.flash('todo_error', 'El mail ya existe en nuestros registros') //TODO: terminar con los mensajes de alerta
-        return res.redirect('/auth/signup')
-    }
-
-    const newUser = new Auth({ name, email, password})
-    newUser.password = await newUser.passwordEncrypt(password)
-    await newUser.save()
-
-    //Mensaje de exito en la creacion de el usuario
-    req.flash("todo_ok", "Se registro correctamente")
-
-    res.redirect('/auth/signin')
+    
 }
 
 const showAuthFormSignin = (req, res) => {
-    if(req.session.messages !== []) {
-        const errors = [{ msg: req.session.messages[0] }]
-        req.session.messages = []
-        return  res.render('auth/signin', {
-            errors
-        })
-    }
+    if(!req.session.messages) return res.render('auth/signin')
 
-    res.render('auth/signin')
+    const errors = [{ msg: req.session.messages[0] }]
+    req.session.messages = []
+    return  res.render('auth/signin', {
+        errors
+    })
 }
 
 const signin = passport.authenticate('local', {

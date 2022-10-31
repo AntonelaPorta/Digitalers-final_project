@@ -1,3 +1,5 @@
+{{> errorAuth}}
+
 <div class="row flex-lg-row-reverse align-items-center g-5 py-4 mb-4 animate__animated animate__fadeInUp">
     <div class="col-12 col-lg-6">
         <img src="/img/louis-hansel-cH5IPjaAYyo-unsplash.jpg" class="d-block mx-auto img-fluid rounded-circle" alt="Restaurant">
@@ -74,24 +76,7 @@
     <div class="row row-cols-1 row-cols-xl-2 g-4">
         {{#each posts}}
         <div class="col">
-            <article class="card post_card animate__animated animate__fadeInUp my-3">
-                <div class="card_image">
-                    <img src="{{this.image}}" class="card-img-top" alt="post image">
-                </div>
-                <div class="card-body p-4">
-                    <strong class="d-inline-block mb-2">{{this.category}}</strong>
-                    <h3 class="mb-0">{{this.title}}</h3>
-                    <p class="mb-2 text-muted">{{this.user}} - {{this.updatedAt}}</p>
-                    <p class="mb-2">{{this.shortBody}}...</p>
-                    <div class="d-flex">
-                        <a href="/posts/edit/{{this._id}}" class="btn btn-warning mx-1">Editar</a>
-                        <form action="/posts/{{this._id}}?_method=DELETE" method="POST" class="d-inline mx-1">
-                            <button class="btn btn-danger">Eliminar</button>
-                        </form>
-                        <a href="/posts/{{this.slug}}" class="link-primary ms-auto">Leer más</a>
-                    </div> 
-                </div>   
-            </article>
+            {{> postCard}}
         </div>
         {{/each}}
     </div>

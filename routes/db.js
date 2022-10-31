@@ -7,7 +7,7 @@ const { generatePost } = require('../helpers/posts')
 routerDev.get('/db/fresh', async (req, res = express.response) => {
     try {
         //delete All
-        //const postsdelete = await Post.deleteMany()
+        const postsdelete = await Post.deleteMany()
         //console.log(postsdelete)
 
         //Count posts
@@ -15,7 +15,7 @@ routerDev.get('/db/fresh', async (req, res = express.response) => {
         console.log(posts)
 
         //Create POST
-        for (let i = 0; i < 15; i++) {
+        for (let i = 0; i < 10; i++) {
             const nuevoPost = generatePost()
             const post = new Post(nuevoPost)
 

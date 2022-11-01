@@ -1,50 +1,44 @@
 <div class="container">
   <h1 class="animate__animated animate__fadeInUp">Mis Posts</h1>
-  <a href="/posts/new" class="btn btn-success animate__animated animate__fadeInUp" class="">
-    <i class="bi bi-plus"></i> 
+  <a
+    href="/posts/new"
+    class="btn btn-success animate__animated animate__fadeInUp"
+  >
+    <i class="bi bi-plus"></i>
     Crear Post
   </a>
-  <div class="row">
-    <div class="col-md-9">
-      {{#each posts}}
+  <div class="row row-cols-1 row-cols-xl-2 g-4">
+    {{#each posts}}
+      <div class="col">
         <article class="card post_card animate__animated animate__fadeInUp my-3">
           <div class="card_image">
-            <img src="{{this.image}}" class="card-img-top" alt="post image">
+            <img src="{{this.image}}" class="card-img-top" alt="post image" />
           </div>
           <div class="card-body p-4">
             <p class="d-inline-block mb-2" id="category">{{this.category}}</p>
             <h3 class="mb-0">{{this.title}}</h3>
             <p class="mb-2 text-muted">{{this.user}} - {{this.updatedAt}}</p>
             <p class="mb-2">{{{this.shortBody}}}...</p>
+
             <div class="d-flex">
-              <a href="/posts/edit/{{this._id}}" class="btn btn-warning mx-1">Editar</a>
-              <form action="/posts/{{this._id}}?_method=DELETE" method="POST" class="d-inline mx-1">
+              <a
+                href="/posts/edit/{{this._id}}"
+                class="btn btn-warning mx-1"
+              >Editar</a>
+              <form
+                action="/posts/{{this._id}}?_method=DELETE"
+                method="POST"
+                class="d-inline mx-1"
+              >
                 <button class="btn btn-danger">Eliminar</button>
               </form>
               <a href="/posts/{{this.slug}}" class="link-primary ms-auto">Leer más</a>
-            </div> 
-          </div>   
+            </div>
+          </div>
         </article>
-      {{/each}}
-    </div>
-    <div class="col-md-3 my-3">
-      <div class="border-bottom pb-3">
-        <h5>Tags</h5>
-        <a href="#!" class="btn btn-outline-secondary m-1">Tag 1</a>
-        <a href="#!" class="btn btn-outline-secondary m-1">Tag 2</a>
-        <a href="#!" class="btn btn-outline-secondary m-1">Tag 3</a>
-        <a href="#!" class="btn btn-outline-secondary m-1">Tag 4</a>
       </div>
-      <div class="border-bottom py-3">
-        <h5>Categories</h5>
-          <ul>
-            <li><a class="text-decoration-none" href="#!">aaaa</a></li>
-            <li><a class="text-decoration-none" href="#!">bbbb</a></li>
-            <li><a class="text-decoration-none" href="#!">cccc</a></li>
-            <li><a class="text-decoration-none" href="#!">dddd</a></li>
-            <li><a class="text-decoration-none" href="#!">eeee</a></li>
-          </ul>
-      </div>
-    </div>
+
+    {{/each}}
   </div>
+
 </div>

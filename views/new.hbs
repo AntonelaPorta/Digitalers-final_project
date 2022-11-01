@@ -1,3 +1,5 @@
+{{> errorAuth}}
+
 <h2>Creando Post</h2>
 
 <form action="/posts" method="POST" class="my-4 needs-validation" id="createForm" id="createForm" novalidate>
@@ -12,7 +14,7 @@
         
         <div class="form-group">
             <label for="body" class="form-label mt-4 fw-bold">Cuerpo</label>
-            <textarea class="form-control" id="body" name="body" rows="3" minlength="500" required></textarea>
+            <textarea class="form-control" id="body" name="body" rows="3" minlength="50" required></textarea>
             <div class="invalid-feedback">
                 Ingrese el cuerpo del post.
             </div>
@@ -36,4 +38,6 @@
 
         <button class="btn btn-success my-4" id="sendEdit">Enviar</button>
     </div>
+
+    
 </form>

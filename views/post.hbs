@@ -6,15 +6,11 @@
             <div class="card_image">
                 <img src="{{post.image}}" class="card-img-top" alt="post image">
             </div>
-            <strong class="d-inline-block mb-2">{{post.category}}</strong>
+            <p class="d-inline-block mb-2" id="category">{{post.category}}</p>
             <p class="mb-2 text-muted">{{post.user}} - {{post.updatedAt}}</p>
         </div>
         <div class="post-content">
-            <p class="mb-2">{{post.body}}</p>
-        </div>
-        <div class="post-tags border-bottom pb-5">
-            <a href="#!" class="btn btn-outline-secondary m-1">Tag 1</a>
-            <a href="#!" class="btn btn-outline-secondary m-1">Tag 2</a>
+            {{{post.body}}}
         </div>
         <div class="comment-section my-5">
             <h5 class="section-title">Deja un comentario</h5>
@@ -52,3 +48,4 @@
     </div>
   </div>
 </div>
+

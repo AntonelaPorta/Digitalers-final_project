@@ -1,5 +1,9 @@
 const mongoose = require('mongoose')
 const slugify = require('slugify')
+const { JSDOM } = require('jsdom')
+const domPurifier = require('dompurify')
+
+const htmlPurify = domPurifier(new JSDOM().window)
 
 const postSchema = new mongoose.Schema(
     {
@@ -45,10 +49,18 @@ postSchema.index({'$**': 'text'})
 //Middleware
 // TODO: llevar a carpeta middlewares
 postSchema.pre('validate', function(next) {
+    //Crear slug
     if(this.title) {
         this.slug = slugify(this.title, {lower: true, strict: true})
     }
+
+    //Crea las views cuando se guarda un documento
     this.views = 0
+
+    //
+    if(this.body) {
+        this.body = htmlPurify.sanitize(this.body)
+    }
     next()
 })
 

@@ -5,7 +5,7 @@ const Post = require('../models/posts')
 const { formatDate } = require('../helpers/date')
 
 const showAuthFormSignUp = (req, res) => {    
-    res.render('auth/signup')
+    res.status(200).render('auth/signup')
 }
 
 /* Register */

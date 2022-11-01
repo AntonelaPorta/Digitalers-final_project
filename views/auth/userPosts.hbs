@@ -12,10 +12,10 @@
             <img src="{{this.image}}" class="card-img-top" alt="post image">
           </div>
           <div class="card-body p-4">
-            <strong class="d-inline-block mb-2">{{this.category}}</strong>
+            <p class="d-inline-block mb-2" id="category">{{this.category}}</p>
             <h3 class="mb-0">{{this.title}}</h3>
             <p class="mb-2 text-muted">{{this.user}} - {{this.updatedAt}}</p>
-            <p class="mb-2">{{this.shortBody}}...</p>
+            <p class="mb-2">{{{this.shortBody}}}...</p>
             <div class="d-flex">
               <a href="/posts/edit/{{this._id}}" class="btn btn-warning mx-1">Editar</a>
               <form action="/posts/{{this._id}}?_method=DELETE" method="POST" class="d-inline mx-1">

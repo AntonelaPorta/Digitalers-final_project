@@ -63,22 +63,23 @@ const getPosts = async (req, res) => {
 const showPost = async (req, res) => {
     try {
         const post = await Post.findOne({slug: req.params.slug}).lean()
-    if (post === null) return res.redirect('/')
+        if (post === null) return res.redirect('/')
 
-    post.updatedAt = formatDate(post.updatedAt)
+
+        post.updatedAt = formatDate(post.updatedAt)
+
+        //Update views post
+        await Post.findOneAndUpdate({slug: req.params.slug}, {views: ++post.views})
     
-    //Update views post
-    await Post.findOneAndUpdate({slug: req.params.slug}, {views: ++post.views})
- 
-    res.status(200).render('post',
-        {
-            title: `Blog Gastronómico - ${post.title}`,
-            post
-        }
-    )
+        res.status(200).render('post',
+            {
+                title: `Blog Gastronómico - ${post.title}`,
+                post
+            }
+        )
 
     } catch (error) {
-        res.status(500).send({message: error.message} || "Error Occurred")
+        res.status(500).send(error.message || "Error Occurred")
     }
 }
 
@@ -98,19 +99,23 @@ const newPost = (req, res) => {
  */
 const createPost = async (req, res) => {
     try {
-        let newPost = new Post()
-
-        newPost.title = req.body.title
-        newPost.body = req.body.body
-        newPost.category = req.body.category
-        newPost.image = req.body.image
+        //console.log(req.body.body)
+        
+        let newPost = new Post(req.body)
+    
         newPost.user = req.user.name
+
+        const title = await Post.findOne({title: newPost.title})
+        if( title ) {
+            req.flash('todo_error', 'El titulo ya existe en nuestros registros') //TODO: terminar con los mensajes de alerta
+            return res.status(400).redirect('/posts/new')
+        }
 
         newPost = await newPost.save()
 
         res.redirect(`/posts/${newPost.slug}`)
     } catch (error) {
-        res.status(500).send({message: error.message} || "Error Occurred")
+        res.status(500).send(error.message || "Error Occurred")
     }
 }
 
@@ -163,7 +168,7 @@ const deletePost = async (req, res) => {
     try {
         await Post.findByIdAndDelete(req.params.id)
 
-        res.redirect('/posts/user')
+        res.redirect(`/auth/${req.user.name}`)
     } catch (error) {
         console.log('Error DELETE')
     }

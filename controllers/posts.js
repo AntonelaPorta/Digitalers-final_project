@@ -1,7 +1,6 @@
 const Post = require('../models/posts')
 const slugify = require('slugify')
 const { formatDate } = require('../helpers/date')
-const { errorMonitor } = require('connect-mongo')
 
 /**
  * GET /
@@ -26,7 +25,7 @@ const getHome = async (req, res = response) => {
             }
         )
     } catch (error) {
-        console.log(error)
+        res.status(500).send({message: error.message} || "Error Occurred")
     }
 }
 
@@ -53,7 +52,7 @@ const getPosts = async (req, res) => {
             }
         )
     } catch (error) {
-        console.log(error)
+        res.status(500).send({message: error.message} || "Error Occurred")
     }
 }
 
@@ -71,7 +70,7 @@ const showPost = async (req, res) => {
     //Update views post
     await Post.findOneAndUpdate({slug: req.params.slug}, {views: ++post.views})
  
-    res.render('post',
+    res.status(200).render('post',
         {
             title: `Blog Gastronómico - ${post.title}`,
             post
@@ -79,38 +78,7 @@ const showPost = async (req, res) => {
     )
 
     } catch (error) {
-        console.log('Error Show')
-    }
-}
-
-/**
- * GET /posts/user
- *  User log Post
- */
-const getUserPosts = async (req, res) => {
-
-    try {
-        const user = req.user.name
-        const posts = await Post.find({user: user}).sort({createdAt: -1}).lean()
-        console.log(posts)
-
-        /*Funcion que acorta el body del post*/
-        if(posts !== []) {
-            posts.forEach(post => {
-                post.shortBody = post.body.substring(0,300)
-                post.updatedAt = formatDate(post.updatedAt)
-            })
-        }
-
-        res.status(200).render('userPosts', 
-            {
-                title: `Blog Gastronómico - Posts de ${user}`,
-                posts,
-                user
-            }
-        )
-    } catch (error) {
-        console.log(errorMonitor)
+        res.status(500).send({message: error.message} || "Error Occurred")
     }
 }
 
@@ -142,7 +110,7 @@ const createPost = async (req, res) => {
 
         res.redirect(`/posts/${newPost.slug}`)
     } catch (error) {
-        console.log('Error al crear un Post', error)
+        res.status(500).send({message: error.message} || "Error Occurred")
     }
 }
 
@@ -159,7 +127,7 @@ const showFormEditPost = async (req, res) => {
             post
         })
     } catch (error) {
-        console.log('Show Edit Post', error)
+        res.status(500).send({message: error.message} || "Error Occurred")
     }
 }
 
@@ -183,7 +151,7 @@ const editPost = async (req, res) => {
 
         res.redirect(`/posts/${updatedPost.slug}`)
     } catch (error) {
-        console.log('Error EDIT')
+        res.status(500).send({message: error.message} || "Error Occurred")
     }
 }
 
@@ -211,6 +179,14 @@ const searchPosts = async (req, res) => {
 
         const posts = await Post.find( { $text: {$search: searchTerm}}).lean()
 
+         /*Funcion que acorta el body del post*/
+        if(posts !== []) {
+            posts.forEach(post => {
+                post.shortBody = post.body.substring(0,300)
+                post.updatedAt = formatDate(post.updatedAt)
+            })
+        } 
+
         res.status(200).render('posts', 
             {
                 title: `Blog Gastronómico - Search`,
@@ -232,6 +208,5 @@ module.exports = {
     newPost,
     showFormEditPost,
     getHome,
-    getUserPosts,
     searchPosts
 }

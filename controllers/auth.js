@@ -1,5 +1,8 @@
 const passport = require("passport")
 const Auth = require("../models/auth")
+const Post = require('../models/posts')
+
+const { formatDate } = require('../helpers/date')
 
 const showAuthFormSignUp = (req, res) => {    
     res.render('auth/signup')
@@ -11,15 +14,16 @@ const signup = async (req, res) => {
         const errors = []    
         const { name, email, password, confirm_password } = req.body
 
+        if( password.length < 4) {
+            console.log("hola")
+            errors.push({ msg: 'La contraseña debe tener al menos 4 caracteres'})
+        }
+
         if( password !== confirm_password) {
             errors.push({ msg: 'La contraseña no machea'})
         }
 
-        if( password.lenght < 4) {
-            errors.push({ msg: 'La contraseña debe tener al menos 4 caracteres'})
-        }
-
-        if( errors.lenght > 0) {
+        if( errors.length > 0) {
             return res.render('auth/signup', {
                 errors,
                 name,
@@ -42,7 +46,7 @@ const signup = async (req, res) => {
 
         res.redirect('/auth/signin')
     } catch (error) {
-        res.status(500).send("Server Error", error) //TODO ERROR
+        res.status(500).send(error || "Server Error") //TODO ERROR
     }
     
 }
@@ -71,10 +75,43 @@ const logout = async (req, res, next) => {
     })
 }
 
+/**
+ * GET /auth/user
+ *  Obtener posts del usuario logueado
+ */
+ const getUserPosts = async (req, res) => {
+
+    try {
+        const user = req.params.user
+        if(user !== req.user.name) return res.status(401).redirect('/')
+
+        const posts = await Post.find({user: user}).sort({createdAt: -1}).lean()
+
+        /*Funcion que acorta el body del post*/
+        if(posts !== []) {
+            posts.forEach(post => {
+                post.shortBody = post.body.substring(0,300)
+                post.updatedAt = formatDate(post.updatedAt)
+            })
+        }
+
+        res.status(200).render('auth/userPosts', 
+            {
+                title: `Blog Gastronómico - Posts de ${user}`,
+                posts,
+                user
+            }
+        )
+    } catch (error) {
+        res.status(500).send({message: error.message} || "Error Occurred")
+    }
+}
+
 module.exports = {
     showAuthFormSignUp,
     signup,
     showAuthFormSignin,
     signin,
-    logout
+    logout,
+    getUserPosts
 }

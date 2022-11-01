@@ -20,7 +20,7 @@
             </li>
         </ul>
 
-        <form class="col-12 col-xl-auto mb-3 mb-xl-0 me-xl-3" method="POST" action="/posts/search">
+        <form class="col-12 col-xl-auto mb-3 mb-xl-0 me-xl-3" method="POST" action="/posts/search?_method=GET">
             <input type="search" name="searchTerm" class="form-control" placeholder="Search..." aria-label="Search">
         </form>
 
@@ -30,7 +30,8 @@
             <img src="/img/user.webp" alt="mdo" width="32" height="32" class="rounded-circle">
           </a>
           <ul class="dropdown-menu text-small" style="">
-            <li><a class="dropdown-item" href="/posts/user">Mis Posts</a></li>
+            <li><a class="dropdown-item" href="/auth/{{userName}}">Mis Posts</a></li>
+            <li><a class="dropdown-item" href="/posts/new">Crear Post</a></li>
             <li><hr class="dropdown-divider"></li>
             <li><a class="dropdown-item" href="/auth/logout">Sign out</a></li>
           </ul>

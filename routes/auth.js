@@ -12,7 +12,7 @@ routerAuth.get("/auth/signin", showAuthFormSignin)
 routerAuth.post("/auth/signin", signin)
 routerAuth.get("/auth/logout", isAuthenticated, logout)
 
-routerAuth.get('/auth/:user', isAuthenticated, getUserPosts) // TODO: ver donde poner path
+routerAuth.get('/auth/:user', isAuthenticated, getUserPosts)
 
 module.exports = {
     routerAuth  

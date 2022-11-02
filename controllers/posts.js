@@ -48,7 +48,7 @@ const getPosts = async (req, res) => {
             })
         }
 
-        res.status(200).render('posts', 
+        res.status(200).render('post/posts', 
             {
                 title: `Blog Gastronómico - Todos los Posts`,
                 TemplateTitle: 'Todos los posts',
@@ -76,7 +76,7 @@ const showPost = async (req, res) => {
         //Update views post
         await Post.findOneAndUpdate({slug: req.params.slug}, {views: ++post.views})
     
-        res.status(200).render('post',
+        res.status(200).render('post/post',
             {
                 title: `Blog Gastronómico - ${post.title}`,
                 post
@@ -96,7 +96,7 @@ const newPost = async (req, res) => {
     try {
         const categories = await Category.find({}).lean()
 
-        res.status(200).render('new', {
+        res.status(200).render('post/new', {
             title: "Blog Gastronómico - Creando Post",
             categories
         })
@@ -141,7 +141,7 @@ const showFormEditPost = async (req, res) => {
         const post = await Post.findById(req.params.id).lean()
         let categories = await Category.find({}).lean()
 
-        res.render('edit', {
+        res.render('post/edit', {
             title: 'Blog Gastronómico - Editando Post',
             post,
             categories
@@ -208,7 +208,7 @@ const searchPosts = async (req, res) => {
             })
         } 
 
-        res.status(200).render('posts', 
+        res.status(200).render('post/posts', 
             {
                 title: `Blog Gastronómico - Search`,
                 TemplateTitle: 'Search Posts',

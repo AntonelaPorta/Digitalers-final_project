@@ -10,6 +10,7 @@
   <div class="post-content">
     {{{post.body}}}
   </div>
+  {{#if user}}
   <div class="comment-section my-5">
     <h5 class="section-title">Deja un comentario</h5>
     <form action="POST" class="comment-form">
@@ -20,7 +21,7 @@
           class="form-control"
           id="name"
           name="name"
-          placeholder="Escribre tu nombre"
+          placeholder="Escribre tu nombre" disabled="" value={{userName}}
         />
       </div>
       <div class="mb-3">
@@ -35,4 +36,5 @@
       <button type="button" class="btn btn-warning">Enviar</button>
     </form>
   </div>
+  {{/if}}
 </div>

@@ -8,13 +8,11 @@
     </div>
     <div class="col-md-3 my-3">
       <div class="border border-end-0 border-start-0 py-3">
-        <h5>Categories</h5>
+        <h5>Categorías</h5>
           <ul>
-            <li><a class="text-decoration-none" href="#!">aaaa</a></li>
-            <li><a class="text-decoration-none" href="#!">bbbb</a></li>
-            <li><a class="text-decoration-none" href="#!">cccc</a></li>
-            <li><a class="text-decoration-none" href="#!">dddd</a></li>
-            <li><a class="text-decoration-none" href="#!">eeee</a></li>
+            {{#each categories}}
+            <li><a class="text-decoration-none" href="/category/{{this.slug}}">{{this.name}}</a></li>
+            {{/each}}
           </ul>
       </div>
     </div>

@@ -22,49 +22,16 @@
 <!-- Categorias -->
 
 <section class="row row-cols-2 row-cols-lg-6 g-2 g-lg-3 py-4 animate__animated animate__fadeInUp">
+    {{#each categories}}
+        {{> categoryCard}}
+    {{/each}}
 
-    <a href="#" class="col text-center category_link">
+    <a href="/category" class="col text-center category_link">
         <div class="category_img shadow">
-            <img src="img/fast-food.jpg" alt="Fast Food">
-        </div>
-        <div class="pt-1">Fast Food</div>
-    </a>
-
-    <a href="#" class="col text-center category_link">
-        <div class="category_img shadow">
-            <img src="img/fast-food.jpg" alt="Fast Food" loading="">
-        </div>
-        <div class="pt-1">Fast Food</div>
-    </a>
-
-    <a href="#" class="col text-center category_link">
-        <div class="category_img shadow">
-            <img src="img/fast-food.jpg" alt="Fast Food" loading="">
-        </div>
-        <div class="pt-1">Fast Food</div>
-    </a>
-
-    <a href="#" class="col text-center category_link">
-        <div class="category_img shadow">
-            <img src="img/fast-food.jpg" alt="Fast Food" loading="">
-        </div>
-        <div class="pt-1">Fast Food</div>
-    </a>
-
-    <a href="#" class="col text-center category_link">
-        <div class="category_img shadow">
-            <img src="img/fast-food.jpg" alt="Fast Food" loading="">
-        </div>
-        <div class="pt-1">Fast Food</div>
-    </a>
-
-    <a href="#" class="col text-center category_link">
-        <div class="category_img shadow">
-            <img src="img/view-all.png" alt="Fast Food" loading="">
+            <img src="img/view-all.png" alt="View All">
         </div>
         <div class="pt-1">Ver Todos</div>
     </a>
-
 </section>
 
 <!-- Fin Categorias -->

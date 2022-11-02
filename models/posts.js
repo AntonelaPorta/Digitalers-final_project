@@ -26,7 +26,8 @@ const postSchema = new mongoose.Schema(
         },
         category: {
             type: String,
-            required: false
+            enum: ['Comida extranjera', 'Fast food', 'Gourmet', 'Buffet', 'Take away', 'Parrilla', 'Pizzeria', 'Vegano', "Restaurante", "Resto bar"],
+            required: true
         },
         image: {
             type: String,

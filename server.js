@@ -13,6 +13,7 @@ const { dbConnection } = require('./config/database')
 const { routerDev } = require('./routes/db')
 const { routerPosts } = require('./routes/posts')
 const { routerAuth } = require('./routes/auth')
+const { routerCategory } = require('./routes/category')
 
 // Inicializo la aplicación de express
 const app = express()
@@ -62,6 +63,7 @@ app.use((req, res, next) => {
 app.use('/', routerDev) //Solo para desarrollo
 app.use('/', routerPosts)
 app.use('/', routerAuth)
+app.use('/', routerCategory)
 
 //Server
 const PORT = process.env.PORT || 8080

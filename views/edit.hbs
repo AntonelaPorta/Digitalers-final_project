@@ -20,7 +20,12 @@
         
         <div class="form-group">
             <label for="category" class="form-label mt-4 fw-bold">Categoría</label>
-            <input type="text" class="form-control" id="category" name="category" value="{{post.category}}" pattern="[A-Za-z]{4,10}" required>
+            <select class="form-select" aria-label="Default select example" id="category" name="category" required>
+                <option value="{{post.category}}" selected>{{post.category}}</option>
+                {{#each categories}}
+                <option value="{{this.name}}" name="category">{{this.name}}</option>
+                {{/each}}
+            </select>
             <div class="invalid-feedback">
                 Ingrese una categoría para el post.
             </div>

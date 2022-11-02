@@ -1,6 +1,7 @@
 const Post = require('../models/posts')
 const slugify = require('slugify')
 const { formatDate } = require('../helpers/date')
+const Category = require('../models/category')
 
 /**
  * GET /
@@ -10,6 +11,7 @@ const { formatDate } = require('../helpers/date')
 const getHome = async (req, res = response) => {
     try {
         const posts = await Post.find({}).sort({views: -1}).limit(4).lean()
+        const categories = await Category.find({}).limit(5).lean()
 
         /*Funcion que acorta el body del post*/
         //TODO Convetir la funcion en una reutilizable
@@ -20,12 +22,13 @@ const getHome = async (req, res = response) => {
 
         res.status(200).render('home', 
             {
-                title: `Blog Gastronómico`,
-                posts
+                title: `Blog Gastronómico - Home`,
+                posts,
+                categories
             }
         )
     } catch (error) {
-        res.status(500).send({message: error.message} || "Error Occurred")
+        res.status(500).send(error.message || "Error Occurred")
     }
 }
 
@@ -36,6 +39,7 @@ const getHome = async (req, res = response) => {
 const getPosts = async (req, res) => {
     try {
         const posts = await Post.find({}).sort({createdAt: -1}).lean()
+        const categories = await Category.find({}).lean()
 
         if(posts !== {}) {
             posts.forEach(post => {
@@ -48,11 +52,12 @@ const getPosts = async (req, res) => {
             {
                 title: `Blog Gastronómico - Todos los Posts`,
                 TemplateTitle: 'Todos los posts',
-                posts
+                posts,
+                categories
             }
         )
     } catch (error) {
-        res.status(500).send({message: error.message} || "Error Occurred")
+        res.status(500).send(error.message || "Error Occurred")
     }
 }
 
@@ -87,10 +92,18 @@ const showPost = async (req, res) => {
  * GET /posts/new
  * Template form para crear un post
  */
-const newPost = (req, res) => {
-    res.status(200).render('new', {
-        title: "Blog Gastronómico - Creando Post"
-    })
+const newPost = async (req, res) => {
+    try {
+        const categories = await Category.find({}).lean()
+
+        res.status(200).render('new', {
+            title: "Blog Gastronómico - Creando Post",
+            categories
+        })
+    } catch (error) {
+        res.status(500).send(error.message || "Error Occurred")
+    }
+   
 }
 
 /**
@@ -102,7 +115,7 @@ const createPost = async (req, res) => {
         //console.log(req.body.body)
         
         let newPost = new Post(req.body)
-    
+
         newPost.user = req.user.name
 
         const title = await Post.findOne({title: newPost.title})
@@ -126,13 +139,15 @@ const createPost = async (req, res) => {
 const showFormEditPost = async (req, res) => {
     try {
         const post = await Post.findById(req.params.id).lean()
+        let categories = await Category.find({}).lean()
 
         res.render('edit', {
             title: 'Blog Gastronómico - Editando Post',
-            post
+            post,
+            categories
         })
     } catch (error) {
-        res.status(500).send({message: error.message} || "Error Occurred")
+        res.status(500).send(error.message || "Error Occurred")
     }
 }
 
@@ -156,7 +171,7 @@ const editPost = async (req, res) => {
 
         res.redirect(`/posts/${updatedPost.slug}`)
     } catch (error) {
-        res.status(500).send({message: error.message} || "Error Occurred")
+        res.status(500).send(error.message || "Error Occurred")
     }
 }
 
@@ -170,7 +185,7 @@ const deletePost = async (req, res) => {
 
         res.redirect(`/auth/${req.user.name}`)
     } catch (error) {
-        console.log('Error DELETE')
+        res.status(500).send(error.message || "Error Occurred")
     }
 }
 
@@ -183,6 +198,7 @@ const searchPosts = async (req, res) => {
         const searchTerm =  req.body.searchTerm
 
         const posts = await Post.find( { $text: {$search: searchTerm}}).lean()
+        const categories = await Category.find({}).lean()
 
          /*Funcion que acorta el body del post*/
         if(posts !== []) {
@@ -196,11 +212,12 @@ const searchPosts = async (req, res) => {
             {
                 title: `Blog Gastronómico - Search`,
                 TemplateTitle: 'Search Posts',
-                posts
+                posts,
+                categories
             }
         )
     } catch (error) {
-        res.status(500).send({message: error.message} || "Error Occurred")
+        res.status(500).send(error.message || "Error Occurred")
     }
 }
 

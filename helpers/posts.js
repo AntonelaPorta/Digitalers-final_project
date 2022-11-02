@@ -14,8 +14,8 @@ const generatePost = () => {
 }
 
 function randomCategory() {
-    const tags = ['Comida mexica', 'Fast Food', 'Gourmet', 'Buffet', 'Take Away', 'Parrilla', 'Pizzeria', 'Vegetariano', 'Vegano']
-    return tags[Math.floor(Math.random() * tags.length)]
+    const categories = ['Comida extranjera', 'Fast food', 'Gourmet', 'Buffet', 'Take away', 'Parrilla', 'Pizzeria', 'Vegano', "Restaurante", "Resto bar"]
+    return categories[Math.floor(Math.random() * categories.length)]
 }
 
 module.exports = {

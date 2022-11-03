@@ -2,6 +2,7 @@ const Post = require('../models/posts')
 const slugify = require('slugify')
 const { formatDate } = require('../helpers/date')
 const Category = require('../models/category')
+const fs = require('fs')
 
 /**
  * GET /
@@ -70,7 +71,6 @@ const showPost = async (req, res) => {
         const post = await Post.findOne({slug: req.params.slug}).lean()
         if (post === null) return res.redirect('/')
 
-
         post.updatedAt = formatDate(post.updatedAt)
 
         //Update views post
@@ -116,7 +116,10 @@ const createPost = async (req, res) => {
         
         let newPost = new Post(req.body)
 
+        newPost.image = req.file.filename
         newPost.user = req.user.name
+
+        console.log(newPost)
 
         const title = await Post.findOne({title: newPost.title})
         if( title ) {
@@ -139,7 +142,7 @@ const createPost = async (req, res) => {
 const showFormEditPost = async (req, res) => {
     try {
         const post = await Post.findById(req.params.id).lean()
-        let categories = await Category.find({}).lean()
+        const categories = await Category.find({}).lean()
 
         res.render('post/edit', {
             title: 'Blog Gastronómico - Editando Post',
@@ -158,18 +161,24 @@ const showFormEditPost = async (req, res) => {
 const editPost = async (req, res) => {
     try {
         const id = req.params.id
-
+        
         const updatedPost = {
             title: req.body.title,
             body: req.body.body,
             category: req.body.category,
-            image: req.body.image,
             slug: slugify(req.body.title, {lower: true, strict: true})
+        }
+
+        if(req.file) {
+            updatedPost.image = req.file.filename
+
+            const post = await Post.findById(req.params.id)
+            await fs.promises.unlink(`./public/${post.image}`)
         }
 
         await Post.findByIdAndUpdate(id, updatedPost, { new: true })
 
-        res.redirect(`/posts/${updatedPost.slug}`)
+        res.status(200).redirect(`/posts/${updatedPost.slug}`)
     } catch (error) {
         res.status(500).send(error.message || "Error Occurred")
     }
@@ -181,8 +190,12 @@ const editPost = async (req, res) => {
  */
 const deletePost = async (req, res) => {
     try {
-        await Post.findByIdAndDelete(req.params.id)
+        const post = await Post.findById(req.params.id)
 
+        //File system borrar imagen
+        await fs.promises.unlink(`./public/${post.image}`)
+
+        await Post.deleteOne(post)
         res.redirect(`/auth/${req.user.name}`)
     } catch (error) {
         res.status(500).send(error.message || "Error Occurred")

@@ -1,6 +1,6 @@
 <h2>Edita tu Post</h2>
 
-<form action="/posts/{{post._id}}?_method=PUT" method="POST" class="my-4 needs-validation" id="editForm" novalidate>
+<form action="/posts/{{post._id}}?_method=PUT" enctype="multipart/form-data" method="POST" class="my-4 needs-validation" id="editForm" novalidate>
     <div class="form-control bg-light">
         <div class="form-group">
             <label for="title" class="form-label mt-4 fw-bold">Título</label>
@@ -32,8 +32,8 @@
         </div>
         
         <div class="form-group">
-            <label for="image" class="form-label mt-4 fw-bold">Ingrese la URL de la imagen</label>
-            <input class="form-control" type="text" id="image" name="image" value="{{post.image}}" pattern="^(http(s)?:\/\/)+[\w\-\._~:\/?#[\]@!\$&'\(\)\*\+,;=.]+$" required>
+            <label for="image" class="form-label mt-4 fw-bold">Ingrese la imagen</label>
+            <input type="file" class="form-control" id="image" name="image" value={{this.image}}>
             <div class="invalid-feedback">
                 Ingrese la url de la imagen con el formato correspondiente.
             </div>

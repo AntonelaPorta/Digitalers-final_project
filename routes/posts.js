@@ -4,6 +4,7 @@ const { getPosts, showPost,newPost, deletePost, editPost, createPost, showFormEd
 
 const routerPosts = express.Router()
 const { isAuthenticated } = require("../middlewares/isauthenticated")
+const uploadImage = require('../middlewares/uploadImages')
 
 //Rutas de Post
 
@@ -16,8 +17,8 @@ routerPosts.get('/posts/search', searchPosts) // TODO: ver donde poner path
 routerPosts.get('/posts/edit/:id', isAuthenticated, showFormEditPost) 
 routerPosts.get('/posts/:slug', showPost)
 
-routerPosts.post('/posts', isAuthenticated, createPost)
-routerPosts.put('/posts/:id', isAuthenticated, editPost)
+routerPosts.post('/posts', isAuthenticated, uploadImage, createPost)
+routerPosts.put('/posts/:id', isAuthenticated, uploadImage, editPost)
 routerPosts.delete('/posts/:id', isAuthenticated, deletePost)
 
 

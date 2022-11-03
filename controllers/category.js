@@ -39,7 +39,7 @@ const showPostsCategory = async (req, res) => {
             })
         }
 
-        res.status(200).render('posts', 
+        res.status(200).render('post/posts', 
             {
                 title: `Blog Gastronómico - ${nameCategory}`,
                 TemplateTitle: `${nameCategory}`,

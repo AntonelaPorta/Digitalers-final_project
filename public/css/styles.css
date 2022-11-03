@@ -106,5 +106,9 @@ p#category {
     color: #E3C770; 
 }
 
+.card-link, #user-edit {
+    position: relative;
+}
+
 /* post */
 

@@ -3,6 +3,8 @@ const slugify = require('slugify')
 const { formatDate } = require('../helpers/date')
 const Category = require('../models/category')
 const fs = require('fs')
+const { imageResize } = require('../helpers/imageResize')
+const { exists } = require('../models/posts')
 
 /**
  * GET /
@@ -116,10 +118,11 @@ const createPost = async (req, res) => {
         
         let newPost = new Post(req.body)
 
-        newPost.image = req.file.filename
-        newPost.user = req.user.name
+        const imageName = `${((req.file.filename).split('.')[0])}.jpeg`
+        imageResize(req.file ,imageName)
 
-        console.log(newPost)
+        newPost.image = imageName
+        newPost.user = req.user.name
 
         const title = await Post.findOne({title: newPost.title})
         if( title ) {
@@ -129,7 +132,7 @@ const createPost = async (req, res) => {
 
         newPost = await newPost.save()
 
-        res.redirect(`/posts/${newPost.slug}`)
+        res.status(200).redirect(`/posts/${newPost.slug}`)
     } catch (error) {
         res.status(500).send(error.message || "Error Occurred")
     }
@@ -170,10 +173,17 @@ const editPost = async (req, res) => {
         }
 
         if(req.file) {
-            updatedPost.image = req.file.filename
+            //Resize imagen y guardamos el nombre en el objeto post
+            const imageName = `${((req.file.filename).split('.')[0])}.jpeg`
+            imageResize(req.file ,imageName)
+            updatedPost.image = imageName
 
+            //File system borrar imagen
             const post = await Post.findById(req.params.id)
-            await fs.promises.unlink(`./public/${post.image}`)
+            const path = `./public/uploads/${post.image}`
+            fs.existsSync(path, async () => {
+                await fs.promises.unlink(`${path}`)
+            })
         }
 
         await Post.findByIdAndUpdate(id, updatedPost, { new: true })
@@ -193,8 +203,11 @@ const deletePost = async (req, res) => {
         const post = await Post.findById(req.params.id)
 
         //File system borrar imagen
-        await fs.promises.unlink(`./public/${post.image}`)
-
+        const path = `./public/uploads/${post.image}`
+        fs.existsSync(path, async () => {
+            await fs.promises.unlink(`${path}`)
+        })
+        
         await Post.deleteOne(post)
         res.redirect(`/auth/${req.user.name}`)
     } catch (error) {

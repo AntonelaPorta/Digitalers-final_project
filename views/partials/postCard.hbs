@@ -1,11 +1,11 @@
 <article class="card post_card animate__animated animate__fadeInUp my-3">
   <div class="card_image">
-    <img src="{{this.image}}" class="card-img" alt="post image" />
-    <div class="card-img-overlay"><span class="badge bg-info">{{this.category}}</span></div>
+    <img src="/uploads/{{this.image}}" class="card-img" alt="post image" />
+    <a class="category-link"><span class="badge bg-info">{{this.category}}</span></a>
   </div>
   <div class="card-body p-4">
     <h3 class="mb-0">{{this.title}}</h3>
-    <p class="mb-2 text-muted">{{this.user}} - {{this.updatedAt}}</p>
+    <p class="mb-2 text-muted">Publicado el {{this.updatedAt}} por {{this.user}}</p>
     <div class="mb-2">
       {{{this.shortBody}}}...
     </div>

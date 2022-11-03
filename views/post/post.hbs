@@ -1,11 +1,11 @@
 <div class="container animate__animated animate__fadeInUp">
   <h1 class="page-title">{{post.title}}</h1>
   <div class="post-header py-2">
-    <div class="card_image">
-      <img src="{{post.image}}" class="card-img-top" alt="post image" />
+    <div class="post-image">
+      <img src="/uploads/{{post.image}}" alt="post image" />
+      <a class="category-link"><span class="badge bg-info">{{post.category}}</span></a>
     </div>
-    <p class="d-inline-block mb-2" id="category">{{post.category}}</p>
-    <p class="mb-2 text-muted">{{post.user}} - {{post.updatedAt}}</p>
+    <p class="mb-2 text-muted">Publicado el {{post.updatedAt}} por {{post.user}}</p>
   </div>
   <div class="post-content">
     {{{post.body}}}

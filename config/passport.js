@@ -8,6 +8,7 @@ passport.use(
             usernameField: 'email'
         },
         async (email, password, done) => {
+
             const user = await Auth.findOne({ email })
 
             if(!user) {

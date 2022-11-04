@@ -2,4 +2,6 @@ node_modules
 .env
 data
 /helpers/insertCategoryDummy.js
+/helpers/posts.js
+/routes/db.js
 

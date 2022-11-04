@@ -27,7 +27,6 @@ app.set('view engine', 'hbs')
 app.set('views', './views')
 
 //Middlewares
-//TODO ver mejorar la configuracion
 app.use(express.static('public'))
 app.use(express.urlencoded({ extended: false }))
 app.use(express.json())
@@ -37,7 +36,7 @@ app.use(
         secret: process.env.SESSION_SECRET,
         resave: true,
         saveUninitialized: true,
-        store: MongoStore.create({ mongoUrl: process.env.DB_LOCAL_URI })
+        store: MongoStore.create({ mongoUrl: process.env.DB_REMOTE_URI })
     })
 )
 app.use(passport.initialize())
@@ -50,12 +49,6 @@ app.use((req, res, next) => {
 
     res.locals.user = req.user || null
     res.locals.userName = req.user ? req.user.name : null
-    next()
-})
-
-//TODO borrar, muestra el usuario logueado
-app.use((req, res, next) => {
-    //console.log(req.user.name)
     next()
 })
 

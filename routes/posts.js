@@ -12,7 +12,7 @@ routerPosts.get('/', getHome)
 
 routerPosts.get('/posts', getPosts)
 routerPosts.get('/posts/new', isAuthenticated, newPost)
-routerPosts.get('/posts/search', searchPosts) // TODO: ver donde poner path
+routerPosts.get('/posts/search', searchPosts)
 
 routerPosts.get('/posts/edit/:id', isAuthenticated, showFormEditPost) 
 routerPosts.get('/posts/:slug', showPost)

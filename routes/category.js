@@ -9,9 +9,7 @@ const routerCategory = express.Router()
 routerCategory.get("/category", showAllCategories)
 routerCategory.get("/category/:slug", showPostsCategory)
 
-
-
-routerCategory.get("/category/db/dummy", insertDummyCategoryData)
+//routerCategory.get("/category/db/dummy", insertDummyCategoryData)
 
 
 module.exports = {

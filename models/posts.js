@@ -48,7 +48,6 @@ const postSchema = new mongoose.Schema(
 postSchema.index({'$**': 'text'})
 
 //Middleware
-// TODO: llevar a carpeta middlewares
 postSchema.pre('validate', function(next) {
     //Crear slug
     if(this.title) {

@@ -97,6 +97,7 @@ const showPost = async (req, res) => {
 const newPost = async (req, res) => {
     try {
         const categories = await Category.find({}).lean()
+        console.log(categories)
 
         res.status(200).render('post/new', {
             title: "Blog Gastronómico - Creando Post",
@@ -117,17 +118,21 @@ const createPost = async (req, res) => {
         //console.log(req.body.body)
         
         let newPost = new Post(req.body)
-        console.log(newPost)
-
+        const categories = await Category.find({}).lean()
         
-        //const imageName = `${((req.file.filename).split('.')[0])}.jpeg`
-        
-        newPost.image = req.file ?  req.file.filename : ""
+        newPost.image = req.file ?  req.file.filename : null
 
         const {title, body, category, image} = newPost
+        console.log(req.file)
+
+        //Validacion de datos
         const errors = validacionCreatePost({title, body, category, image})
         if(errors) {
-            const categories = await Category.find({}).lean()
+            //Borrar imagen si create no tiene exito
+            if(req.file) {
+                await fs.promises.unlink(req.file.path)
+            }
+        
             return res.status(400).render('post/new', {
                 errors,
                 post: {
@@ -139,19 +144,24 @@ const createPost = async (req, res) => {
             })
         }
 
+        //Resize imagen y borrado de la anterior 
         if(req.file){
-            newPost.image = await imageResize(req.file) 
+            const imageName = await imageResize(req.file)
+
+            newPost.image = `/uploads/${imageName}`
         }
 
         newPost.user = req.user.name
 
         const titleExists = await Post.findOne({title: newPost.title})
         if( titleExists ) {
-            req.flash('todo_error', 'El titulo ya existe en nuestros registros') //TODO: terminar con los mensajes de alerta
+            req.flash('todo_error', 'El titulo ya existe en nuestros registros')
             return res.status(400).redirect('/posts/new')
         }
 
         newPost = await newPost.save()
+
+        req.flash("todo_ok", "Se creo el post correctamente")
 
         res.status(200).redirect(`/posts/${newPost.slug}`)
     } catch (error) {
@@ -194,31 +204,44 @@ const editPost = async (req, res) => {
             category: req.body.category,
         }
 
+        req.file ?  image = req.file.filename : image = ".jpg"
+
+        //Validacion de datos
+        const errors = validacionCreatePost({...updatedPost, image})
+        console.log(req.file)
+
+        if(errors) {
+            //File system borrar imagen
+            if(req.file) {
+                await fs.promises.unlink(req.file.path)
+            }
+
+            return res.status(400).render('post/edit', {
+                errors,
+                post: {...updatedPost, _id: id}
+            })
+        }
+
+        //Resize imagen y borrado de la anterior 
         if(req.file) {
             //Resize imagen y guardamos el nombre en el objeto post
             const imageName = await imageResize(req.file)
-            updatedPost.image = imageName
-
-            //File system borrar imagen del post editado
+            updatedPost.image = `/uploads/${imageName}`
+            
+            //File system borrar imagen del post antiguo
             const post = await Post.findById(req.params.id)
-            const path = `./public/uploads/${post.image}`
-            fs.existsSync(path, async () => {
+            const path = `./public${post.image}`
+            if(fs.existsSync(path)) {
                 await fs.promises.unlink(`${path}`)
-            })
+            }
         }
 
-        //Validacion
-        const errors = validacionEditPost(updatedPost)
-        if(errors) {
-            return res.status(400).render('post/edit', {
-                errors,
-                post: updatedPost
-            })
-        }
-
+        //Actualizo el slug
         updatedPost.slug = slugify(req.body.title, {lower: true, strict: true})
 
         await Post.findByIdAndUpdate(id, updatedPost, { new: true })
+
+        req.flash("todo_ok", "Se edito el post correctamente")
 
         res.status(200).redirect(`/posts/${updatedPost.slug}`)
     } catch (error) {
@@ -236,10 +259,10 @@ const deletePost = async (req, res) => {
         const post = await Post.findById(req.params.id)
 
         //File system borrar imagen
-        const path = `./public/uploads/${post.image}`
-        fs.existsSync(path, async () => {
+        const path = `./public${post.image}`
+        if(fs.existsSync(path)) {
             await fs.promises.unlink(`${path}`)
-        })
+        }
         
         await Post.deleteOne(post)
         res.redirect(`/auth/${req.user.name}`)

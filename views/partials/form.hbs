@@ -27,10 +27,14 @@
       id="category"
       name="category"
     >
-      <option value="{{post.category}}" selected>{{post.category}}</option>
+      <option>Seleccione alguna categoria</option>
       {{#each categories}}
         <option value="{{this.name}}" name="category">{{this.name}}</option>
       {{/each}}
+      {{#if post}}
+      <option value="{{post.category}}" selected>{{post.category}}</option>
+      {{/if}}
+      
     </select>
   </div>
 

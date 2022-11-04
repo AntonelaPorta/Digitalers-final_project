@@ -7,9 +7,10 @@ const generatePost = () => {
     const post = {
         title: faker.lorem.words(6),
         body: faker.lorem.sentence(100),
-        user: 'Antonela',
+        //user: faker.internet.userName(),
+        user: 'anto',
         category: randomCategory(),
-        image: '1667503059515-fast-food.jpeg',
+        image: faker.image.food(640, 480, true),
     }
     return post
 }

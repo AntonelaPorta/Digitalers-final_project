@@ -14,12 +14,15 @@ const signup = async (req, res) => {
         const errors = []    
         const { name, email, password, confirm_password } = req.body
 
-        if( password.length < 4) {
-            errors.push({ msg: 'La contraseña debe tener al menos 4 caracteres'})
+        const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#$@!%&*?])[A-Za-z\d#$@!%&*?]{8,30}$/
+        console.log(passwordPattern.test(password))
+
+        if(!passwordPattern.test(password)) {
+            errors.push('La contraseña debe al menos una letra mayúscula, una letra minúscula, un caracter especial (#$@!%&*?) y en total entre 8 y 30 caracteres.')
         }
 
         if( password !== confirm_password) {
-            errors.push({ msg: 'La contraseña no machea'})
+            errors.push('La contraseña no machea')
         }
 
         if( errors.length > 0) {
@@ -30,9 +33,15 @@ const signup = async (req, res) => {
             })
         }
 
-        const userFound = await Auth.findOne({ email })
+        const userFound = await Auth.findOne({ name })
         if( userFound ) {
-            req.flash('todo_error', 'El mail ya existe en nuestros registros') //TODO: terminar con los mensajes de alerta
+            req.flash('todo_error', 'El usuario ya existe en nuestros registros')
+            return res.status(400).redirect('/auth/signup')
+        }
+
+        const emailFound = await Auth.findOne({ email })
+        if( emailFound ) {
+            req.flash('todo_error', 'El mail ya existe en nuestros registros')
             return res.status(400).redirect('/auth/signup')
         }
 
@@ -45,7 +54,7 @@ const signup = async (req, res) => {
 
         res.redirect('/auth/signin')
     } catch (error) {
-        res.status(500).send(error || "Server Error") //TODO ERROR
+        res.status(500).send(error.message || "Server Error")
     }
     
 }
@@ -53,9 +62,10 @@ const signup = async (req, res) => {
 const showAuthFormSignin = (req, res) => {
     if(!req.session.messages) return res.render('auth/signin')
 
-    const errors = [{ msg: req.session.messages[0] }]
+    const errors = [req.session.messages[0]]
+    console.log(req.session.messages)
     req.session.messages = []
-    return  res.render('auth/signin', {
+    return res.render('auth/signin', {
         errors
     })
 }
@@ -102,7 +112,7 @@ const logout = async (req, res, next) => {
             }
         )
     } catch (error) {
-        res.status(500).send({message: error.message} || "Error Occurred")
+        res.status(500).send(error.message || "Error Occurred")
     }
 }
 

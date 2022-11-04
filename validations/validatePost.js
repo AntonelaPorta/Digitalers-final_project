@@ -5,7 +5,7 @@ const validacionEditPost = (post) => {
         {
             title: Joi.string()
                 .min(5)
-                .max(30)
+                .max(100)
                 .required()
                 .messages({
                     'string.base': 'El título debería ser de tipo string',
@@ -27,17 +27,17 @@ const validacionEditPost = (post) => {
                 }),
             category: Joi.string()
                 .valid('Comida extranjera', 'Fast food', 'Gourmet', 'Buffet', 'Take away', 'Parrilla', 'Pizzeria', 'Vegano', "Restaurante", "Resto bar")
-                .required()
                 .messages({
                     'string.base': 'La categoría del post debería ser de tipo string',
                     'string.empty': 'La categoría del post no debería estar vacio',
-                    'string.valid': `La categoría debe cohincider con los seleccionado`,
+                    'any.only': `La categoría debe cohincider con los seleccionado`,
                     'any.required': `Debe completar la categoría del post`,
                 }),
             image: Joi.string()
-            .regex(/\.(jpg|jpeg|png|webp)$/i)
+            .regex(RegExp(/\.(jpg|jpeg|png|webp)$/i))
+            .required()
             .messages({
-                'object.regex': 'La imagen del post no debería estar vacio',
+                'string.regex': 'La imagen del post no debería estar vacio',
             })
         }
     )
@@ -58,7 +58,7 @@ const validacionCreatePost = (post) => {
         {
             title: Joi.string()
                 .min(5)
-                .max(30)
+                .max(100)
                 .required()
                 .messages({
                     'string.base': 'El título debería ser de tipo string',
@@ -80,20 +80,19 @@ const validacionCreatePost = (post) => {
                 }),
             category: Joi.string()
                 .valid('Comida extranjera', 'Fast food', 'Gourmet', 'Buffet', 'Take away', 'Parrilla', 'Pizzeria', 'Vegano', "Restaurante", "Resto bar")
-                .required()
                 .messages({
                     'string.base': 'La categoría del post debería ser de tipo string',
                     'string.empty': 'La categoría del post no debería estar vacio',
-                    'any.valid': `Seleccione alguna categoria`,
+                    'any.only': `Seleccione alguna categoria`,
                     'any.required': `Debe completar la categoría del post`,
                 }),
             image: Joi.string()
-            //.regex(/\.(jpg|jpeg|png|webp)$/i)
-            .required()
-            .messages({
-                'string.empty': 'La imagen del post no debería estar vacio',
-                'object.regex': 'El archivo debe ser de formato imagen',
-            })
+                .regex(RegExp(/\.(jpg|jpeg|png|webp)$/i))
+                .required()
+                .messages({
+                    'string.empty': 'La imagen del post no debería estar vacio',
+                    'string.regex': 'El archivo debe ser de formato imagen',
+                })
         }
     )
 

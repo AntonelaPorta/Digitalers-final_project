@@ -59,7 +59,7 @@ app.use('/', routerAuth)
 app.use('/', routerCategory)
 
 //Server
-const PORT = process.env.PORT || 8080
+const PORT = process.env.PORT
 
 app.listen(PORT, err => {
     if(err) throw new Error(`Ocurrió un problema con el servidor: ${err}`)

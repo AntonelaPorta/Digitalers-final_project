@@ -1,48 +1,8 @@
 {{> errorAuth}}
+{{> errorValidation}}
 
 <h2>Creando Post</h2>
 
-<form action="/posts" enctype="multipart/form-data" method="POST" class="my-4 needs-validation" id="createForm" novalidate>
-    <div class="form-control bg-light">
-        <div class="form-group">
-            <label for="title" class="form-label mt-4 fw-bold">Título</label>
-            <input type="text" class="form-control" id="title" name="title" required>
-            <div class="invalid-feedback">
-                Ingrese un título al post.
-            </div>
-        </div>
-        
-        <div class="form-group">
-            <label for="body" class="form-label mt-4 fw-bold">Cuerpo</label>
-            <textarea class="form-control" id="body" name="body" rows="3" minlength="50" required></textarea>
-            <div class="invalid-feedback">
-                Ingrese el cuerpo del post.
-            </div>
-        </div>
-        
-        <div class="form-group">
-            <label for="category" class="form-label mt-4 fw-bold">Categoría</label>
-            <select class="form-select" aria-label="Default select example" id="category" name="category" required>
-                <option>Seleccione una categoría</option>
-                {{#each categories}}
-                <option value="{{this.name}}" name="category">{{this.name}}</option>
-                {{/each}}
-            </select>
-            <div class="invalid-feedback">
-                Ingrese una categoría para el post
-            </div>
-        </div>
-        
-        <div class="form-group">
-            <label for="image" class="form-label mt-4 fw-bold">Ingrese la URL de la imagen</label>
-            <input type="file" class="form-control" id="image" name="image" value={{this.image}}>
-            <div class="invalid-feedback">
-                Ingrese la url de la imagen
-            </div>
-        </div>
-
-        <button class="btn btn-success my-4" id="sendEdit">Enviar</button>
-    </div>
-
-    
+<form action="/posts" enctype="multipart/form-data" method="POST" class="my-4" id="createForm" >
+    {{> form}}
 </form>

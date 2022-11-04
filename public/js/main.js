@@ -1,5 +1,4 @@
-const editForm = document.getElementById('editForm')
-const createForm = document.getElementById('createForm')
+
 
 /*Loader*/
 document.addEventListener('readystatechange', () => {
@@ -12,17 +11,3 @@ document.addEventListener('readystatechange', () => {
     }
 })
 
-/*Validacion Formularios EDIT y CREATE*/
-if(editForm || createForm) {
-    const form = document.querySelector('.needs-validation')
-
-    form.addEventListener('submit', event => {
-        if (!form.checkValidity() ) {
-            event.preventDefault()
-            event.stopPropagation()
-        }
-
-        form.classList.add('was-validated')
-    })
-
-}

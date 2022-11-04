@@ -15,7 +15,6 @@ const signup = async (req, res) => {
         const { name, email, password, confirm_password } = req.body
 
         if( password.length < 4) {
-            console.log("hola")
             errors.push({ msg: 'La contraseña debe tener al menos 4 caracteres'})
         }
 

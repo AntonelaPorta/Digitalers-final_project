@@ -1,0 +1,49 @@
+<div class="form-control bg-light">
+  <div class="form-group">
+    <label for="title" class="form-label mt-4 fw-bold">Título</label>
+    <input
+      type="text"
+      class="form-control"
+      id="title"
+      name="title"
+      value="{{post.title}}"
+    />
+  </div>
+
+  <div class="form-group">
+    <label for="body" class="form-label mt-4 fw-bold">Cuerpo</label>
+    <textarea
+      class="form-control"
+      id="body"
+      name="body"
+    >{{post.body}}</textarea>
+  </div>
+
+  <div class="form-group">
+    <label for="category" class="form-label mt-4 fw-bold">Categoría</label>
+    <select
+      class="form-select"
+      aria-label="Default select example"
+      id="category"
+      name="category"
+    >
+      <option value="{{post.category}}" selected>{{post.category}}</option>
+      {{#each categories}}
+        <option value="{{this.name}}" name="category">{{this.name}}</option>
+      {{/each}}
+    </select>
+  </div>
+
+  <div class="form-group">
+    <label for="image" class="form-label mt-4 fw-bold">Ingrese la imagen</label>
+    <input
+      type="file"
+      class="form-control"
+      id="image"
+      name="image"
+      value={{this.image}}
+    />
+  </div>
+
+  <button class="btn btn-success my-4" id="sendEdit">Enviar</button>
+</div>

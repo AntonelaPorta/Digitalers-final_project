@@ -4,7 +4,7 @@ const { formatDate } = require('../helpers/date')
 const Category = require('../models/category')
 const fs = require('fs')
 const { imageResize } = require('../helpers/imageResize')
-const { exists } = require('../models/posts')
+const { validacionEditPost, validacionCreatePost } = require('../validations/validatePost')
 
 /**
  * GET /
@@ -117,15 +117,36 @@ const createPost = async (req, res) => {
         //console.log(req.body.body)
         
         let newPost = new Post(req.body)
+        console.log(newPost)
 
-        const imageName = `${((req.file.filename).split('.')[0])}.jpeg`
-        imageResize(req.file ,imageName)
+        
+        //const imageName = `${((req.file.filename).split('.')[0])}.jpeg`
+        
+        newPost.image = req.file ?  req.file.filename : ""
 
-        newPost.image = imageName
+        const {title, body, category, image} = newPost
+        const errors = validacionCreatePost({title, body, category, image})
+        if(errors) {
+            const categories = await Category.find({}).lean()
+            return res.status(400).render('post/new', {
+                errors,
+                post: {
+                    title: newPost.title,
+                    body: newPost.body,
+                    category: newPost.category,
+                },
+                categories
+            })
+        }
+
+        if(req.file){
+            newPost.image = await imageResize(req.file) 
+        }
+
         newPost.user = req.user.name
 
-        const title = await Post.findOne({title: newPost.title})
-        if( title ) {
+        const titleExists = await Post.findOne({title: newPost.title})
+        if( titleExists ) {
             req.flash('todo_error', 'El titulo ya existe en nuestros registros') //TODO: terminar con los mensajes de alerta
             return res.status(400).redirect('/posts/new')
         }
@@ -134,6 +155,7 @@ const createPost = async (req, res) => {
 
         res.status(200).redirect(`/posts/${newPost.slug}`)
     } catch (error) {
+        console.log(error)
         res.status(500).send(error.message || "Error Occurred")
     }
 }
@@ -165,20 +187,19 @@ const editPost = async (req, res) => {
     try {
         const id = req.params.id
         
+
         const updatedPost = {
             title: req.body.title,
             body: req.body.body,
             category: req.body.category,
-            slug: slugify(req.body.title, {lower: true, strict: true})
         }
 
         if(req.file) {
             //Resize imagen y guardamos el nombre en el objeto post
-            const imageName = `${((req.file.filename).split('.')[0])}.jpeg`
-            imageResize(req.file ,imageName)
+            const imageName = await imageResize(req.file)
             updatedPost.image = imageName
 
-            //File system borrar imagen
+            //File system borrar imagen del post editado
             const post = await Post.findById(req.params.id)
             const path = `./public/uploads/${post.image}`
             fs.existsSync(path, async () => {
@@ -186,10 +207,22 @@ const editPost = async (req, res) => {
             })
         }
 
+        //Validacion
+        const errors = validacionEditPost(updatedPost)
+        if(errors) {
+            return res.status(400).render('post/edit', {
+                errors,
+                post: updatedPost
+            })
+        }
+
+        updatedPost.slug = slugify(req.body.title, {lower: true, strict: true})
+
         await Post.findByIdAndUpdate(id, updatedPost, { new: true })
 
         res.status(200).redirect(`/posts/${updatedPost.slug}`)
     } catch (error) {
+        console.log(error)
         res.status(500).send(error.message || "Error Occurred")
     }
 }

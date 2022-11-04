@@ -13,17 +13,17 @@ const { validacionEditPost, validacionCreatePost } = require('../validations/val
 
 const getHome = async (req, res = response) => {
     try {
-        const posts = await Post.find({}).sort({views: -1}).limit(4).lean()
+        const posts = await Post.find({}).sort({ views: -1 }).limit(4).lean()
         const categories = await Category.find({}).limit(5).lean()
 
         /*Funcion que acorta el body del post*/
         //TODO Convetir la funcion en una reutilizable
         posts.forEach(post => {
-            post.shortBody = post.body.substring(0,300)
+            post.shortBody = post.body.substring(0, 300)
             post.updatedAt = formatDate(post.updatedAt)
         })
 
-        res.status(200).render('home', 
+        res.status(200).render('home',
             {
                 title: `Blog Gastronómico - Home`,
                 posts,
@@ -41,17 +41,17 @@ const getHome = async (req, res = response) => {
  */
 const getPosts = async (req, res) => {
     try {
-        const posts = await Post.find({}).sort({createdAt: -1}).lean()
+        const posts = await Post.find({}).sort({ createdAt: -1 }).lean()
         const categories = await Category.find({}).lean()
 
-        if(posts !== {}) {
+        if (posts !== {}) {
             posts.forEach(post => {
-                post.shortBody = post.body.substring(0,300)
+                post.shortBody = post.body.substring(0, 300)
                 post.updatedAt = formatDate(post.updatedAt)
             })
         }
 
-        res.status(200).render('post/posts', 
+        res.status(200).render('post/posts',
             {
                 title: `Blog Gastronómico - Todos los Posts`,
                 TemplateTitle: 'Todos los posts',
@@ -70,14 +70,14 @@ const getPosts = async (req, res) => {
  */
 const showPost = async (req, res) => {
     try {
-        const post = await Post.findOne({slug: req.params.slug}).lean()
+        const post = await Post.findOne({ slug: req.params.slug }).lean()
         if (post === null) return res.redirect('/')
 
         post.updatedAt = formatDate(post.updatedAt)
 
         //Update views post
-        await Post.findOneAndUpdate({slug: req.params.slug}, {views: ++post.views})
-    
+        await Post.findOneAndUpdate({ slug: req.params.slug }, { views: ++post.views })
+
         res.status(200).render('post/post',
             {
                 title: `Blog Gastronómico - ${post.title}`,
@@ -106,7 +106,7 @@ const newPost = async (req, res) => {
     } catch (error) {
         res.status(500).send(error.message || "Error Occurred")
     }
-   
+
 }
 
 /**
@@ -116,23 +116,23 @@ const newPost = async (req, res) => {
 const createPost = async (req, res) => {
     try {
         //console.log(req.body.body)
-        
+
         let newPost = new Post(req.body)
         const categories = await Category.find({}).lean()
-        
-        newPost.image = req.file ?  req.file.filename : null
 
-        const {title, body, category, image} = newPost
+        newPost.image = req.file ? req.file.filename : null
+
+        const { title, body, category, image } = newPost
         console.log(req.file)
 
         //Validacion de datos
-        const errors = validacionCreatePost({title, body, category, image})
-        if(errors) {
+        const errors = validacionCreatePost({ title, body, category, image })
+        if (errors) {
             //Borrar imagen si create no tiene exito
-            if(req.file) {
+            if (req.file) {
                 await fs.promises.unlink(req.file.path)
             }
-        
+
             return res.status(400).render('post/new', {
                 errors,
                 post: {
@@ -145,7 +145,7 @@ const createPost = async (req, res) => {
         }
 
         //Resize imagen y borrado de la anterior 
-        if(req.file){
+        if (req.file) {
             const imageName = await imageResize(req.file)
 
             newPost.image = `/uploads/${imageName}`
@@ -153,8 +153,8 @@ const createPost = async (req, res) => {
 
         newPost.user = req.user.name
 
-        const titleExists = await Post.findOne({title: newPost.title})
-        if( titleExists ) {
+        const titleExists = await Post.findOne({ title: newPost.title })
+        if (titleExists) {
             req.flash('todo_error', 'El titulo ya existe en nuestros registros')
             return res.status(400).redirect('/posts/new')
         }
@@ -196,7 +196,7 @@ const showFormEditPost = async (req, res) => {
 const editPost = async (req, res) => {
     try {
         const id = req.params.id
-        
+
 
         const updatedPost = {
             title: req.body.title,
@@ -204,40 +204,40 @@ const editPost = async (req, res) => {
             category: req.body.category,
         }
 
-        req.file ?  image = req.file.filename : image = ".jpg"
+        req.file ? image = req.file.filename : image = ".jpg"
 
         //Validacion de datos
-        const errors = validacionCreatePost({...updatedPost, image})
+        const errors = validacionCreatePost({ ...updatedPost, image })
         console.log(req.file)
 
-        if(errors) {
+        if (errors) {
             //File system borrar imagen
-            if(req.file) {
+            if (req.file) {
                 await fs.promises.unlink(req.file.path)
             }
 
             return res.status(400).render('post/edit', {
                 errors,
-                post: {...updatedPost, _id: id}
+                post: { ...updatedPost, _id: id }
             })
         }
 
         //Resize imagen y borrado de la anterior 
-        if(req.file) {
+        if (req.file) {
             //Resize imagen y guardamos el nombre en el objeto post
             const imageName = await imageResize(req.file)
             updatedPost.image = `/uploads/${imageName}`
-            
+
             //File system borrar imagen del post antiguo
             const post = await Post.findById(req.params.id)
             const path = `./public${post.image}`
-            if(fs.existsSync(path)) {
+            if (fs.existsSync(path)) {
                 await fs.promises.unlink(`${path}`)
             }
         }
 
         //Actualizo el slug
-        updatedPost.slug = slugify(req.body.title, {lower: true, strict: true})
+        updatedPost.slug = slugify(req.body.title, { lower: true, strict: true })
 
         await Post.findByIdAndUpdate(id, updatedPost, { new: true })
 
@@ -260,10 +260,10 @@ const deletePost = async (req, res) => {
 
         //File system borrar imagen
         const path = `./public${post.image}`
-        if(fs.existsSync(path)) {
+        if (fs.existsSync(path)) {
             await fs.promises.unlink(`${path}`)
         }
-        
+
         await Post.deleteOne(post)
         res.redirect(`/auth/${req.user.name}`)
     } catch (error) {
@@ -277,20 +277,33 @@ const deletePost = async (req, res) => {
  */
 const searchPosts = async (req, res) => {
     try {
-        const searchTerm =  req.body.searchTerm
+        const searchTerm = req.body.searchTerm
 
-        const posts = await Post.find( { $text: {$search: searchTerm}}).lean()
+        const posts = await Post.find({ $text: { $search: searchTerm } }).lean()
         const categories = await Category.find({}).lean()
 
-         /*Funcion que acorta el body del post*/
-        if(posts !== []) {
+        
+        if (posts.length === 0) {
+            return res.status(400).render('post/posts',
+                {
+                    title: `Blog Gastronómico - Search`,
+                    TemplateTitle: 'Search Posts',
+                    message: `No se encontro ningun resultado que contenga: ${searchTerm}`,
+                    posts,
+                    categories
+                }
+            )
+        }
+
+        /*Funcion que acorta el body del post*/
+        if (posts !== []) {
             posts.forEach(post => {
-                post.shortBody = post.body.substring(0,300)
+                post.shortBody = post.body.substring(0, 300)
                 post.updatedAt = formatDate(post.updatedAt)
             })
-        } 
+        }
 
-        res.status(200).render('post/posts', 
+        res.status(200).render('post/posts',
             {
                 title: `Blog Gastronómico - Search`,
                 TemplateTitle: 'Search Posts',

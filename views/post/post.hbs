@@ -4,10 +4,10 @@
   <h1 class="page-title">{{post.title}}</h1>
   <div class="post-header py-2">
     <div class="post-image">
-      <img src="{{post.image}}" alt="post image" />
+      <img src="{{post.image}}" alt="{{post.image}}" />
       <a class="category-link"><span class="badge bg-info">{{post.category}}</span></a>
     </div>
-    <p class="mb-2 text-muted">Publicado el {{post.updatedAt}} por {{post.user}}</p>
+    <p class="m-2 text-muted">Publicado el {{post.updatedAt}} por {{post.user}}</p>
   </div>
   <div class="post-content">
     {{{post.body}}}

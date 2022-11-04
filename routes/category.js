@@ -1,6 +1,6 @@
 const express = require('express')
 const { showAllCategories, showPostsCategory } = require('../controllers/category')
-const insertDummyCategoryData = require('../helpers/insertCategoryDummy')
+//const insertDummyCategoryData = require('../helpers/insertCategoryDummy')
 
 const routerCategory = express.Router()
 

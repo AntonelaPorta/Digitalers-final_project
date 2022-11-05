@@ -11,7 +11,7 @@ const validacionEditPost = (post) => {
                     'string.base': 'El título debería ser de tipo string',
                     'string.empty': 'El título no debería estar vacio',
                     'string.min': `El título debería tener al menos 5 caracteres`,
-                    'string.max': `El título debería tener menos 30 caracteres`,
+                    'string.max': `El título debería tener menos 100 caracteres`,
                     'any.required': `Debe completar el título`,
                 }),
             body: Joi.string()

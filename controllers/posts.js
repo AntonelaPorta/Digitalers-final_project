@@ -97,7 +97,6 @@ const showPost = async (req, res) => {
 const newPost = async (req, res) => {
     try {
         const categories = await Category.find({}).lean()
-        console.log(categories)
 
         res.status(200).render('post/new', {
             title: "Blog Gastronómico - Creando Post",
@@ -115,8 +114,6 @@ const newPost = async (req, res) => {
  */
 const createPost = async (req, res) => {
     try {
-        //console.log(req.body.body)
-
         let newPost = new Post(req.body)
         const categories = await Category.find({}).lean()
 
@@ -197,7 +194,6 @@ const editPost = async (req, res) => {
     try {
         const id = req.params.id
 
-
         const updatedPost = {
             title: req.body.title,
             body: req.body.body,
@@ -208,7 +204,6 @@ const editPost = async (req, res) => {
 
         //Validacion de datos
         const errors = validacionCreatePost({ ...updatedPost, image })
-        console.log(req.file)
 
         if (errors) {
             //File system borrar imagen

@@ -61,7 +61,6 @@ const showAuthFormSignin = (req, res) => {
     if(!req.session.messages) return res.render('auth/signin')
 
     const errors = [req.session.messages[0]]
-    console.log(req.session.messages)
     req.session.messages = []
     return res.render('auth/signin', {
         errors

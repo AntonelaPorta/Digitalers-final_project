@@ -24,7 +24,7 @@ dbConnection()
 //Handlebars config
 app.engine('hbs', engine({
     extname: '.hbs',
-    helpers: require('./helpers/hbsHelpers') 
+    helpers: require('./config/hbsHelpers') 
 }))
 app.set('view engine', 'hbs')
 app.set('views', './views')

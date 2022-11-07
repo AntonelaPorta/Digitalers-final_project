@@ -3,8 +3,7 @@ const slugify = require('slugify')
 const Category = require('../models/category')
 const fs = require('fs')
 const { imageResize } = require('../helpers/imageResize')
-const { validacionEditPost, validacionCreatePost } = require('../validations/validatePost')
-const hbsHelpers = require('../helpers/hbsHelpers')
+const { validatePost } = require('../validations/validatePost')
 
 /**
  * GET /
@@ -37,14 +36,14 @@ const getPosts = async (req, res) => {
         const posts = await Post.find({}).sort({ createdAt: -1 }).lean()
         const categories = await Category.find({}).lean()
 
-    res.status(200).render('post/posts',
-            {
-                title: `Blog Gastronómico - Todos los Posts`,
-                TemplateTitle: 'Todos los posts',
-                posts,
-                categories
-            }
-        )
+        res.status(200).render('post/posts',
+                {
+                    title: `Blog Gastronómico - Todos los Posts`,
+                    TemplateTitle: 'Todos los posts',
+                    posts,
+                    categories
+                }
+            )
     } catch (error) {
         res.status(500).send(error.message || "Error Occurred")
     }
@@ -57,7 +56,11 @@ const getPosts = async (req, res) => {
 const showPost = async (req, res) => {
     try {
         const post = await Post.findOne({ slug: req.params.slug }).lean()
-        if (post === null) return res.redirect('/')
+
+        if (post === null) {
+            req.flash('todo_error', 'No se encontró el post solicitado')
+            return res.redirect('/posts')
+        }
 
         //Update views post
         await Post.findOneAndUpdate({ slug: req.params.slug }, { views: ++post.views })
@@ -98,16 +101,23 @@ const newPost = async (req, res) => {
  */
 const createPost = async (req, res) => {
     try {
-        let newPost = new Post(req.body)
         const categories = await Category.find({}).lean()
 
+        let newPost = new Post(req.body)
+        newPost.user = req.user.name
         newPost.image = req.file ? req.file.filename : null
 
         const { title, body, category, image } = newPost
 
         //Validacion de datos
-        const errors = validacionCreatePost({ title, body, category, image })
-        if (errors) {
+        const errors = validatePost({ title, body, category, image })
+
+        //El titulo no se puede repetir
+        const titleExists = await Post.findOne({ title: newPost.title })
+        
+        if (titleExists) errors.push('El titulo ya existe en nuestros registros')
+
+        if (errors.length > 0) {
             //Borrar imagen si create no tiene exito
             if (req.file) {
                 await fs.promises.unlink(req.file.path)
@@ -129,14 +139,6 @@ const createPost = async (req, res) => {
             const imageName = await imageResize(req.file)
 
             newPost.image = `/uploads/${imageName}`
-        }
-
-        newPost.user = req.user.name
-
-        const titleExists = await Post.findOne({ title: newPost.title })
-        if (titleExists) {
-            req.flash('todo_error', 'El titulo ya existe en nuestros registros')
-            return res.status(400).redirect('/posts/new')
         }
 
         newPost = await newPost.save()
@@ -186,9 +188,9 @@ const editPost = async (req, res) => {
         req.file ? image = req.file.filename : image = ".jpg"
 
         //Validacion de datos
-        const errors = validacionCreatePost({ ...updatedPost, image })
+        const errors = validatePost({ ...updatedPost, image })
 
-        if (errors) {
+        if (errors.lenght > 0) {
             //File system borrar imagen
             if (req.file) {
                 await fs.promises.unlink(req.file.path)
@@ -236,7 +238,7 @@ const deletePost = async (req, res) => {
     try {
         const post = await Post.findById(req.params.id)
 
-        //File system borrar imagen
+        //Borrado de imagen al borrar post
         const path = `./public${post.image}`
         if (fs.existsSync(path)) {
             await fs.promises.unlink(`${path}`)
@@ -259,7 +261,6 @@ const searchPosts = async (req, res) => {
 
         const posts = await Post.find({ $text: { $search: searchTerm } }).lean()
         const categories = await Category.find({}).lean()
-
         
         if (posts.length === 0) {
             return res.status(400).render('post/posts',

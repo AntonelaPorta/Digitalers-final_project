@@ -57,7 +57,7 @@ postSchema.pre('validate', function(next) {
     //Crea las views cuando se guarda un documento
     this.views = 0
 
-    //
+    //Sanitizar body
     if(this.body) {
         this.body = htmlPurify.sanitize(this.body)
     }

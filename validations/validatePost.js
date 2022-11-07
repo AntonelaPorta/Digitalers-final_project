@@ -1,7 +1,7 @@
 const Joi = require('joi')
 
 const validatePost = (post) => {
-    const SchemaEditPost = Joi.object(
+    const SchemaPost = Joi.object(
         {
             title: Joi.string()
                 .min(5)
@@ -38,12 +38,13 @@ const validatePost = (post) => {
                 .required()
                 .messages({
                     'string.empty': 'La imagen del post no debería estar vacio',
-                    'string.regex': 'El archivo debe ser de formato imagen',
+                    'object.regex': 'El archivo debe ser de formato imagen',
+                    "string.pattern.base": "El archivo debe ser de formato imagen"
                 })
         }
     )
 
-    const validation = SchemaEditPost.validate(post, { abortEarly: false })
+    const validation = SchemaPost.validate(post, { abortEarly: false })
 
         if(validation.error){
             let errors = validation.error.message.split('. ')

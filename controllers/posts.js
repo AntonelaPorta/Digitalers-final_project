@@ -190,20 +190,19 @@ const editPost = async (req, res) => {
         //Validacion de datos
         const errors = validatePost({ ...updatedPost, image })
 
-        if (errors.lenght > 0) {
+        if (errors.length > 0) {
             //File system borrar imagen
             if (req.file) {
                 await fs.promises.unlink(req.file.path)
             }
 
-            return res.status(400).render('post/edit', {
+            return res.status(400).render(`post/edit`, {
                 errors,
                 post: { ...updatedPost, _id: id }
             })
         }
 
-        //Resize imagen y borrado de la anterior 
-        if (req.file) {
+        if(req.file) {
             //Resize imagen y guardamos el nombre en el objeto post
             const imageName = await imageResize(req.file)
             updatedPost.image = `/uploads/${imageName}`

@@ -1,6 +1,7 @@
 const passport = require("passport")
 const Auth = require("../models/auth")
 const Post = require('../models/posts')
+const { validateAuth } = require('../validations/validateAuth')
 
 const showAuthFormSignUp = (req, res) => {    
     res.status(200).render('auth/signup')
@@ -9,19 +10,9 @@ const showAuthFormSignUp = (req, res) => {
 /* Register */
 const signup = async (req, res) => {
     try {
-        const errors = []    
         const { name, email, password, confirm_password } = req.body
 
-        const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#$@!%&*?])[A-Za-z\d#$@!%&*?]{8,30}$/
-        console.log(passwordPattern.test(password))
-
-        if(!passwordPattern.test(password)) {
-            errors.push('La contraseña debe al menos una letra mayúscula, una letra minúscula, un caracter especial (#$@!%&*?) y en total entre 8 y 30 caracteres.')
-        }
-
-        if( password !== confirm_password) {
-            errors.push('La contraseña no machea')
-        }
+        const errors = validateAuth({ name, email, password })
 
         if( errors.length > 0) {
             return res.render('auth/signup', {

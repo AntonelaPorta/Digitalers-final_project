@@ -61,6 +61,10 @@ app.use('/', routerPosts)
 app.use('/', routerAuth)
 app.use('/', routerCategory)
 
+app.use((req, res, next) => {
+    res.status(404).render('404', {title: "Page Not Found"})
+});
+
 //Server
 const PORT = process.env.PORT
 

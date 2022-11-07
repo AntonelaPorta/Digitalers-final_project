@@ -22,7 +22,10 @@ const app = express()
 dbConnection()
 
 //Handlebars config
-app.engine('hbs', engine({extname: '.hbs'}))
+app.engine('hbs', engine({
+    extname: '.hbs',
+    helpers: require('./helpers/hbsHelpers') 
+}))
 app.set('view engine', 'hbs')
 app.set('views', './views')
 

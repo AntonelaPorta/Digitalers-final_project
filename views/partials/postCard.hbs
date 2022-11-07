@@ -5,9 +5,10 @@
   </div>
   <div class="card-body p-4">
     <h3 class="mb-0">{{this.title}}</h3>
-    <p class="mb-2 text-muted">Publicado el {{this.updatedAt}} por {{this.user}}</p>
+    <p class="mb-2 text-muted">Publicado el {{formatDate this.updatedAt}} por {{this.user}}</p>
     <div class="mb-2">
-      {{{this.shortBody}}}...
+      <!-- {{{this.shortBody}}}... -->
+      {{{shortenBody this.body}}}
     </div>
     <div class="d-flex">
       <a href="/posts/{{this.slug}}" class="card-link link-primary ms-auto">Leer más</a>

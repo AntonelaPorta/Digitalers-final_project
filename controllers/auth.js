@@ -2,8 +2,6 @@ const passport = require("passport")
 const Auth = require("../models/auth")
 const Post = require('../models/posts')
 
-const { formatDate } = require('../helpers/date')
-
 const showAuthFormSignUp = (req, res) => {    
     res.status(200).render('auth/signup')
 }
@@ -95,14 +93,6 @@ const logout = async (req, res, next) => {
         if(user !== req.user.name) return res.status(401).redirect('/')
 
         const posts = await Post.find({user: user}).sort({createdAt: -1}).lean()
-
-        /*Funcion que acorta el body del post*/
-        if(posts !== []) {
-            posts.forEach(post => {
-                post.shortBody = post.body.substring(0,300)
-                post.updatedAt = formatDate(post.updatedAt)
-            })
-        }
 
         res.status(200).render('auth/userPosts', 
             {

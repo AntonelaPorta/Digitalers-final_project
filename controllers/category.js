@@ -1,6 +1,6 @@
-const { formatDate } = require("../helpers/date")
 const Category = require("../models/category")
 const Post = require('../models/posts')
+
 
 const showAllCategories = async (req, res) => {
     try {
@@ -31,13 +31,6 @@ const showPostsCategory = async (req, res) => {
         //Buscamos los posts
         const posts = await Post.find({category: nameCategory}).sort({createdAt: -1}).lean()
         const categories = await Category.find({}).lean()
-
-        if(posts !== {}) {
-            posts.forEach(post => {
-                post.shortBody = post.body.substring(0,300)
-                post.updatedAt = formatDate(post.updatedAt)
-            })
-        }
 
         res.status(200).render('post/posts', 
             {

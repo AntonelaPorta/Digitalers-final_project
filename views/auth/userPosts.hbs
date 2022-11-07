@@ -8,37 +8,39 @@
     Crear Post
   </a>
   <div class="row row-cols-1 row-cols-xl-2 g-4 mb-5">
-    {{#each posts}}
-      <div class="col animate__animated animate__fadeInUp">
-        <article class="card post_card animate__animated animate__fadeInUp mt-1">
-          <div class="card_image">
-            <img src="{{this.image}}" class="card-img-top" alt="post image" />
-            <div class="card-img-overlay"><span class="badge bg-info">{{this.category}}</span></div>
-          </div>
-          <div class="card-body p-4">
-            <h3 class="mb-0">{{this.title}}</h3>
-            <p class="mb-2 text-muted">Publicado el {{this.updatedAt}} por {{this.user}}</p>
-            <p class="mb-2">{{{this.shortBody}}}...</p>
-
-            <div class="d-flex" id="user-edit">
-              <a
-                href="/posts/edit/{{this._id}}"
-                class="btn btn-warning mx-1"
-              >Editar</a>
-              <form
-                action="/posts/{{this._id}}?_method=DELETE"
-                method="POST"
-                class="d-inline mx-1"
-              >
-                <button class="btn btn-danger">Eliminar</button>
-              </form>
-              <a href="/posts/{{this.slug}}" class="link-primary ms-auto">Leer más</a>
+    {{#if posts}}
+      {{#each posts}}
+        <div class="col animate__animated animate__fadeInUp">
+          <article class="card post_card animate__animated animate__fadeInUp mt-1">
+            <div class="card_image">
+              <img src="{{this.image}}" class="card-img-top" alt="post image" />
+              <div class="card-img-overlay"><span class="badge bg-info">{{this.category}}</span></div>
             </div>
-          </div>
-        </article>
-      </div>
+            <div class="card-body p-4">
+              <h3 class="mb-0">{{this.title}}</h3>
+              <p class="mb-2 text-muted">Publicado el {{formatDate this.updatedAt}} por {{this.user}}</p>
+              <p class="mb-2">{{{shortenBody this.body}}}...</p>
 
-    {{/each}}
+              <div class="d-flex" id="user-edit">
+                <a
+                  href="/posts/edit/{{this._id}}"
+                  class="btn btn-warning mx-1"
+                >Editar</a>
+                <form
+                  action="/posts/{{this._id}}?_method=DELETE"
+                  method="POST"
+                  class="d-inline mx-1"
+                >
+                  <button class="btn btn-danger">Eliminar</button>
+                </form>
+                <a href="/posts/{{this.slug}}" class="link-primary ms-auto">Leer más</a>
+              </div>
+            </div>
+          </article>
+        </div>
+
+      {{/each}}
+    {{/if}}
   </div>
 
 </div>

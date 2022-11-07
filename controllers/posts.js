@@ -1,10 +1,10 @@
 const Post = require('../models/posts')
 const slugify = require('slugify')
-const { formatDate } = require('../helpers/date')
 const Category = require('../models/category')
 const fs = require('fs')
 const { imageResize } = require('../helpers/imageResize')
 const { validacionEditPost, validacionCreatePost } = require('../validations/validatePost')
+const hbsHelpers = require('../helpers/hbsHelpers')
 
 /**
  * GET /
@@ -15,13 +15,6 @@ const getHome = async (req, res = response) => {
     try {
         const posts = await Post.find({}).sort({ views: -1 }).limit(4).lean()
         const categories = await Category.find({}).limit(5).lean()
-
-        /*Funcion que acorta el body del post*/
-        //TODO Convetir la funcion en una reutilizable
-        posts.forEach(post => {
-            post.shortBody = post.body.substring(0, 300)
-            post.updatedAt = formatDate(post.updatedAt)
-        })
 
         res.status(200).render('home',
             {
@@ -44,14 +37,7 @@ const getPosts = async (req, res) => {
         const posts = await Post.find({}).sort({ createdAt: -1 }).lean()
         const categories = await Category.find({}).lean()
 
-        if (posts !== {}) {
-            posts.forEach(post => {
-                post.shortBody = post.body.substring(0, 300)
-                post.updatedAt = formatDate(post.updatedAt)
-            })
-        }
-
-        res.status(200).render('post/posts',
+    res.status(200).render('post/posts',
             {
                 title: `Blog Gastronómico - Todos los Posts`,
                 TemplateTitle: 'Todos los posts',
@@ -72,8 +58,6 @@ const showPost = async (req, res) => {
     try {
         const post = await Post.findOne({ slug: req.params.slug }).lean()
         if (post === null) return res.redirect('/')
-
-        post.updatedAt = formatDate(post.updatedAt)
 
         //Update views post
         await Post.findOneAndUpdate({ slug: req.params.slug }, { views: ++post.views })
@@ -120,7 +104,6 @@ const createPost = async (req, res) => {
         newPost.image = req.file ? req.file.filename : null
 
         const { title, body, category, image } = newPost
-        console.log(req.file)
 
         //Validacion de datos
         const errors = validacionCreatePost({ title, body, category, image })
@@ -288,14 +271,6 @@ const searchPosts = async (req, res) => {
                     categories
                 }
             )
-        }
-
-        /*Funcion que acorta el body del post*/
-        if (posts !== []) {
-            posts.forEach(post => {
-                post.shortBody = post.body.substring(0, 300)
-                post.updatedAt = formatDate(post.updatedAt)
-            })
         }
 
         res.status(200).render('post/posts',
